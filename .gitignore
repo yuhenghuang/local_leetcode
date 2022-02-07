@@ -1,0 +1,5 @@
+.vscode
+build
+build.sh
+build-win32.bat
+headeronly_version
