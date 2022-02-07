@@ -1,6 +1,8 @@
 # C++ Library to Execute Leetcode Problems Locally
 
-This repository contains a C++ header only library that helps to execute [Leetcode](https://leetcode.com/) problems in **one line**. Currently the library is header-only thus no build is needed.
+This repository contains a C++ header only library that helps to execute [Leetcode](https://leetcode.com/) problems in **one line**. 
+
+header-only version will be available in the future.
 
 ### Quick Start
 
@@ -102,6 +104,20 @@ cmake --build .
 ```
 
 ### Special Cases
+
+##### Node types
+
+To enable correct `Node` for specific problem from various types, one needs to define macro before the header file.
+
+For example, to add a tree node with four children, 
+
+```cpp
+#define QUAD_NODE
+#include <local_leetcode>
+```
+
+For more definition of marcos, see the content of the header file, *include/local_leetcode.hpp*
+
 
 ##### Inconsistent input type
 
