@@ -190,29 +190,7 @@ destroy_impl(Tp* root, nary_graph_tag tag) {
   for (Tp* const& ptr : s)
     delete ptr;
   
-  /* failed to debug the implementation...
 
-  // for the purpose of coping with undirected cyclic graph
-  // cut edges from neighbors to root
-  // act as if the graph is directed
-  for (Tp*& p : root->neighbors) {
-    if (p != nullptr) {
-      // use auto and std::begin (end) to handle three types of arrays
-      auto iter = std::find(std::begin(p->neighbors), std::end(p->neighbors), root);
-      if (iter != std::end(p->neighbors))
-        *iter = nullptr;
-      else {
-        std::cerr << "input undirected (a)cyclic graph is not well-defined" << std::endl;
-        abort();
-      }
-    }
-  }
-
-  for (Tp*& p : root->neighbors)
-    destroy_impl(p, tag);
-
-  delete root;
-  */
 }
 
 

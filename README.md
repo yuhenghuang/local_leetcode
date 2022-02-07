@@ -1,10 +1,10 @@
 # C++ Library to Execute Leetcode Problems Locally
 
-This repository contains a C++ header only library that helps to execute [Leetcode](https://leetcode.com/) problems in **one line**. 
+This repository contains a C++ library that helps to execute [Leetcode](https://leetcode.com/) problems in **one line**. 
 
 header-only version will be available in the future.
 
-### Quick Start
+## Quick Start
 
 - Source file
 
@@ -56,7 +56,7 @@ clang++ -std=c++17 -stdlib=libc++ {source_name.cpp} -fsanitize=address -fsanitiz
 
 Check the directory *examples* for more granular cases
 
-### Build
+## Build
 
 * Requirements
   * clang++11 or higher
@@ -79,6 +79,10 @@ cd build
 cmake .. -DCMAKE_CXX_COMPILER=clang++  -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 ```
+
+The built library should be in */lib/liblocal_leetcode.so*.
+
+Use `ln -s` or update `ld` configurations to make the library to be loaded at runtime.
 
 #### Windows (msys2)
 
@@ -103,7 +107,11 @@ cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOL
 cmake --build .
 ```
 
-### Special Cases
+The built library should be in */bin/liblocal_leetcode.dll* and */lib/liblocal_leetcode.dll.a*.
+
+Use `mklink` to put *.dll* file in the directory of executables or set `PATH` to make the library to be loaded at runtime.
+
+## Special Cases
 
 ##### Node types
 
@@ -146,7 +154,7 @@ before including the library header file.
 
 ##### memory leaking of return pointer (optional)
 
-This is an optional feature which release memories. The module is implemented by heavy meta-programming techniques and should cover most common data types (e.g. tree).
+This is an optional feature which release memories of return pointer, thus avoid memory leaking. The module is implemented by heavy meta-programming techniques and should cover most common data types (e.g. tree). Pointers in form of vector, e.g. `std::vector<Node*>` are also supported.
 
 To enable it, 
 
@@ -157,9 +165,10 @@ To enable it,
 
 For more details of the supported data types of the feature, see the following section.
 
-### `ll::destroy(void *)` (optional)
+### destroy (delete) pointers (optional)
 
-This function is used to release memories of the interim objects in the heap.
+
+This function, `ll::destroy(void *)` from *include/io/destroyer.hpp*,  is used to release memories of the interim objects in the heap.
 
 The original purpose of the function is to manage the memory perfectly by the user him/herself, while it came to light that the goal was impossible during the development and tests. The function remains specifically for someone who wants to manage the memory by oneself without setting `ASAN_OPTIONS=detect_leaks=0`.
 
