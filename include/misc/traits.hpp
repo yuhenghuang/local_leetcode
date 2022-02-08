@@ -40,10 +40,6 @@ namespace ll {
 template <typename>
 struct rank: public std::integral_constant<size_t, 0UL> { };
 
-// nested integer
-template <>
-struct rank<NestedInteger>: public std::integral_constant<size_t, 1UL> { };
-
 // pointer, e.g. tree
 template <typename Tp>
 struct rank<Tp*>: public std::integral_constant<size_t, 1UL> { };
@@ -51,6 +47,14 @@ struct rank<Tp*>: public std::integral_constant<size_t, 1UL> { };
 // vector
 template <typename Tp>
 struct rank<std::vector<Tp>>: public std::integral_constant<size_t, 1UL + rank<Tp>::value> { };
+
+// nested integer
+template <>
+struct rank<NestedInteger>: public std::integral_constant<size_t, 1UL> { };
+
+// sea
+template <>
+struct rank<Sea>: public std::integral_constant<size_t, 2UL> { };
 
 
 // char or string

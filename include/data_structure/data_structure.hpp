@@ -259,6 +259,20 @@ class Iterator {
 };
 
 
+class Sea {
+  private:
+    std::vector<std::vector<int>> prefix;
+
+  public:
+    Sea();
+    Sea(const std::vector<std::vector<int>>& ships);
+
+    Sea& operator==(Sea&&) noexcept;
+
+    bool hasShips(std::vector<int> topRight, std::vector<int> bottomLeft);
+};
+
+
 // _LL_IMPLEMENTATION
 
 

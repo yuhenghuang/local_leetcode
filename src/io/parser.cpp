@@ -456,4 +456,13 @@ universal_parser<NestedInteger>::operator()(const std::string& s) const {
   return ni;
 }
 
+
+// sea
+Sea
+universal_parser<Sea>::operator()(const std::string& s) const {
+  auto ships = universal_parser<std::vector<std::vector<int>>>()(s);
+
+  return Sea(ships);
+}
+
 } // end of ll

@@ -90,4 +90,34 @@ Iterator::hasNext() const {
   return data->iter != data->end;
 }
 
+
+// note: sea is implemented given only official public interfaces
+Sea::Sea() { }
+
+Sea::Sea(const std::vector<std::vector<int>>& ships): prefix(1002, std::vector<int>(1002)) {
+  for (auto& ship : ships) 
+    prefix[ship[0] + 1][ship[1] + 1] = 1;
+
+  for (int i = 1; i <= 1001; ++i)
+    for (int j = 1; j <= 1001; ++j)
+      prefix[i][j] += prefix[i-1][j] + prefix[i][j-1] - prefix[i-1][j-1];
+}
+
+Sea& 
+Sea::operator==(Sea&& rhs) noexcept {
+  prefix = std::move(rhs.prefix);
+
+  return *this;
+}
+
+bool 
+Sea::hasShips(std::vector<int> topRight, std::vector<int> bottomLeft) {
+  return (
+    prefix[topRight[0]+1][topRight[1]+1] - 
+    prefix[topRight[0]+1][bottomLeft[1]] - 
+    prefix[bottomLeft[0]][topRight[1]+1] +
+    prefix[bottomLeft[0]][bottomLeft[1]]
+  ) > 0;
+}
+
 } // end of ll

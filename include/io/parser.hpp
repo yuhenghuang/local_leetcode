@@ -69,6 +69,7 @@ template <> struct universal_parser<CircularListNode*> { CircularListNode* opera
 template <> struct universal_parser<TernaryListNode*> { TernaryListNode* operator()(const std::string&) const; };
 
 template <> struct universal_parser<NestedInteger> { NestedInteger operator()(const std::string&) const; };
+template <> struct universal_parser<Sea> { Sea operator()(const std::string&) const; };
 
 template <typename Tp> struct universal_parser<std::vector<Tp>> { std::vector<Tp> operator()(const std::string&) const; };
 
