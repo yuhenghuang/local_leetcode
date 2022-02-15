@@ -93,7 +93,7 @@ cmake .. -DCMAKE_CXX_COMPILER=clang++  -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 ```
 
-The built library should be in */lib/liblocal_leetcode.so*.
+The built library should be *lib/liblocal_leetcode.so* (or *lib/liblocal_leetcode.dylib* on macOS).
 
 Use `ln -s` or update `ld` configurations to make the library to be loaded at runtime.
 
@@ -120,7 +120,7 @@ cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOL
 cmake --build .
 ```
 
-The built library should be in */bin/liblocal_leetcode.dll* and */lib/liblocal_leetcode.dll.a*.
+The built library should be in *bin/liblocal_leetcode.dll* and *lib/liblocal_leetcode.dll.a*.
 
 Use `mklink` to put *.dll* file in the directory of executables or set `PATH` to make the library to be loaded at runtime.
 
@@ -152,7 +152,7 @@ EXECS(Solution::method, return_type, (arg_types, ...));
 
 ##### non-trivial constructor of class `Solution`
 
-The library internally distinguish *solution* and *design* types of problems by checking whether the class is trivially constructable.
+The library internally distinguishes *solution* and *design* types of problems by checking whether the class is trivially constructable.
 
 This logic fails if `Solution` has an explicit constructor. 
 

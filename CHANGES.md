@@ -1,7 +1,16 @@
 ------------------------------------------------------------------------------
+2022-02-21
+
+The document details the changes between this version, local leetcode 0.9.1.1 and previous version, local leetcode 0.9.1.0.
+
+- allows `AppleClang` as compiler
+
+- fixed typos in *README.md*
+
+------------------------------------------------------------------------------
 2022-02-14
 
-The document details the changes between this version, local leetcode 0.9.0.1 and previous version, local leetcode 0.9.1.0.
+The document details the changes between this version, local leetcode 0.9.1.0 and previous version, local leetcode 0.9.0.0.
 
 - fixed wrong information in *README.md*
   - header-only version is forthcoming, not avaible now.
