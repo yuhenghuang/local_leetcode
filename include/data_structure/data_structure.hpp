@@ -64,6 +64,9 @@ class NestedInteger;
 // java-like iterator over vector<int> with methods of next() and hasNext()
 class Iterator;
 
+// sea where ships are located at integer points represented by a cartesian plane, and each integer point may contain at most 1 ship.
+class Sea;
+
 
 // --------------------
 // implementation below
@@ -269,6 +272,7 @@ class Sea {
 
     Sea& operator==(Sea&&) noexcept;
 
+    // has ships in the rectangle represented by two points, including on the boundary.
     bool hasShips(std::vector<int> topRight, std::vector<int> bottomLeft);
 };
 

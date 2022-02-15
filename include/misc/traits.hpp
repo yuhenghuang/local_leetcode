@@ -241,7 +241,7 @@ struct do_graph_category_impl {
       std::is_same<Tp, decltype(std::declval<Tp&>()->next)>::value
     >::type
   >
-  static linked_list_tag test(int);
+  static linked_list_tag test(int16_t);
 
   template <
     typename Tp, 
@@ -252,7 +252,7 @@ struct do_graph_category_impl {
       >::value
     >::type
   >
-  static binary_tree_tag test(long);
+  static binary_tree_tag test(int32_t);
 
   template <
     typename Tp, 
@@ -265,7 +265,7 @@ struct do_graph_category_impl {
       >::value
     >::type
   >
-  static quad_tree_tag test(long long);
+  static quad_tree_tag test(int64_t);
 
   template <
     typename Tp, 
@@ -288,7 +288,7 @@ struct do_graph_category_impl {
       >::value
     >::type
   >
-  static nary_graph_tag test(size_t);
+  static nary_graph_tag test(uint64_t);
 
   template <typename>
   static single_node_tag test(...);

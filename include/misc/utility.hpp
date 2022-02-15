@@ -50,8 +50,8 @@ class param_range {
     typedef property<size_t, self, &param_range::length> length_property;
     
   public:
-    size_t i;
-    size_t j;
+    size_t i; // start index, inclusive
+    size_t j; // end index, exclusive
 
     // size_t, length property
     length_property l;

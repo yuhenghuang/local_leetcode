@@ -28,7 +28,20 @@ int main() {
 
 - Input format
 
-By default, the program will load the input in *Inputs/{source_name.txt}* in current working directory.
+By default, the program will load the input in *Inputs/{source_name.txt}* in current working directory. And the structure of the working directory should be 
+
+```
+.
+├── 01_solution.cpp
+├── 02_design.cpp
+├── 03_overload.cpp
+└── Inputs
+    ├── 01_solution.txt
+    ├── 02_design.txt
+    └── 03_overload.txt
+```
+
+if none of the settings are changed (just as *examples*).
 
 <sup>* the input directory and extension can be customized by defining specific MACROs. `_LL_INPUT_DIR` and `_LL_INPUT_EXT` are used for the directory and extension of input files respectively</sup>
 
@@ -54,7 +67,7 @@ clang++ -std=c++17 -stdlib=libc++ {source_name.cpp} -fsanitize=address -fsanitiz
 <sup>* To suppress memory leak error, try setting environment variable `ASAN_OPTIONS=detect_leaks=0`</sup>
 
 
-Check the directory *examples* for more granular cases
+Check the directory [*examples*](https://github.com/yuhenghuang/local_leetcode/tree/main/examples) for more granular cases.
 
 ## Build
 
@@ -117,14 +130,14 @@ Use `mklink` to put *.dll* file in the directory of executables or set `PATH` to
 
 To enable correct `Node` for specific problem from various types, one needs to define macro before the header file.
 
-For example, to add a tree node with four children, 
+For example, to use a tree node with four children as typename `Node`, 
 
 ```cpp
 #define QUAD_NODE
 #include <local_leetcode>
 ```
 
-For more definition of marcos, see the content of the header file, *include/local_leetcode.hpp*
+For more definition of marcos, see the content of the header file, [*include/local_leetcode.hpp*](https://github.com/yuhenghuang/local_leetcode/blob/main/include/local_leetcode.hpp)
 
 
 ##### Inconsistent input type
@@ -168,7 +181,7 @@ For more details of the supported data types of the feature, see the following s
 ### destroy (delete) pointers (optional)
 
 
-This function, `ll::destroy(void *)` from *include/io/destroyer.hpp*,  is used to release memories of the interim objects in the heap.
+This function, `ll::destroy(void *)` from [*include/io/destroyer.hpp*](https://github.com/yuhenghuang/local_leetcode/blob/main/include/io/destroyer.hpp),  is used to release memories of the interim objects in the heap.
 
 The original purpose of the function is to manage the memory perfectly by the user him/herself, while it came to light that the goal was impossible during the development and tests. The function remains specifically for someone who wants to manage the memory by oneself without setting `ASAN_OPTIONS=detect_leaks=0`.
 
@@ -186,4 +199,6 @@ Supported objects (`Node`)
   - directed graph (nary tree) with `std::vector<Node*> children`
   - undirected graph with `std::vector<Node*> neighbors`
 
+## License
 
+The library is released under the GNU GLP-3.0 license.
