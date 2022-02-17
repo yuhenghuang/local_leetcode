@@ -5,7 +5,16 @@ The document details the changes between this version, local leetcode 0.9.1.1 an
 
 - allows `AppleClang` as compiler
 
+- add sample *vscode* configurations in *examples/* directory
+
+- enable commentting out test cases by adding `#` at the beginning of the line
+
+- add feature to control the maximum number of elements of array to be printed
+
+- add move ctor to `Sea` type
+
 - fixed typos in *README.md*
+
 
 ------------------------------------------------------------------------------
 2022-02-14
@@ -28,6 +37,7 @@ The document details the changes between this version, local leetcode 0.9.1.0 an
 - deleted unused code block in comment (in *include/io/destroyer.hpp::193*)
 
 - add support for `Sea` type (problem no.1274)
+
 
 ------------------------------------------------------------------------------
 2022-02-07

@@ -103,6 +103,10 @@ Sea::Sea(const std::vector<std::vector<int>>& ships): prefix(1002, std::vector<i
       prefix[i][j] += prefix[i-1][j] + prefix[i][j-1] - prefix[i-1][j-1];
 }
 
+Sea::Sea(Sea&& rhs) noexcept : 
+  prefix(std::move(rhs.prefix)) 
+{ }
+
 Sea& 
 Sea::operator==(Sea&& rhs) noexcept {
   prefix = std::move(rhs.prefix);

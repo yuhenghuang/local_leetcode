@@ -1,0 +1,20 @@
+{
+  "configurations": [
+      {
+          "name": "Linux",
+          "includePath": [
+              "${workspaceFolder}/",
+              "${HOME}/programs/local_leetcode/include/"
+          ],
+          "defines": [],
+          "compilerPath": "/usr/bin/clang",
+          "compilerArgs": [
+              "-stdlib=libc++"
+          ],
+          "cStandard": "c17",
+          "cppStandard": "c++17",
+          "intelliSenseMode": "linux-clang-x64"
+      }
+  ],
+  "version": 4
+}

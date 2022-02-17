@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.16.3)
 
-project(local_leetcode VERSION 0.9.1.0)
+project(local_leetcode VERSION 0.9.1.1)
 
 # check clang and its version
-if(NOT (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"))
+if(NOT CMAKE_CXX_COMPILER_ID MATCHES "^(Apple)?Clang$")
   message(SEND_ERROR "Please choose clang as the compiler")
 endif()
 
@@ -13,8 +13,7 @@ endif()
 
 
 set(CMAKE_CXX_FLAGS "-std=c++17 -stdlib=libc++ -O2 -Wall -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer")
-
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -D_LIBCPP_DEBUG=1")
 
 set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG")
 set(CMAKE_SHARED_LINKER_FLAGS "-fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer")

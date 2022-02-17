@@ -1,4 +1,4 @@
-# C++ Library to Execute Leetcode Problems Locally
+# A C++ Library to Execute Leetcode Problems Locally
 
 This repository contains a C++ library that helps to execute [Leetcode](https://leetcode.com/) problems in **one line**. 
 

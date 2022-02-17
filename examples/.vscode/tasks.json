@@ -1,0 +1,66 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "C/C++: clang++ build active file",
+      "command": "/bin/clang++",
+      "args": [
+        "-std=c++17",
+        "-stdlib=libc++",
+        "-I${HOME}/programs/local_leetcode/include",
+        "-L${HOME}/.local/lib",
+        "-fsanitize=address",
+        "-fsanitize=undefined",
+        "-fno-omit-frame-pointer",
+        "-Wall",
+        "-O2",
+        "${file}",
+        "-o",
+        "${fileDirname}/ExeFiles/${fileBasenameNoExtension}",
+        // "-g",
+        "-llocal_leetcode"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "detail": "compiler: /bin/clang++"
+    },
+    {
+      "type": "shell",
+      "label": "C/C++: clang++ build active file for debug",
+      "command": "/bin/clang++",
+      "args": [
+        "-std=c++17",
+        "-stdlib=libc++",
+        "-I${HOME}/programs/local_leetcode/include",
+        "-L${HOME}/.local/lib",
+        "-fsanitize=address",
+        "-fsanitize=undefined",
+        "-fno-omit-frame-pointer",
+        "-fstandalone-debug",
+        "-g",
+        // "-O2",
+        "${file}",
+        "-o",
+        "${fileDirname}/ExeFiles/${fileBasenameNoExtension}",
+        "-llocal_leetcode"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": "build",
+      "detail": "compiler: /bin/clang++-12"
+    },
+  ]
+}

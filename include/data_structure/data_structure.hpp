@@ -270,6 +270,9 @@ class Sea {
     Sea();
     Sea(const std::vector<std::vector<int>>& ships);
 
+    // move construction and assignment
+    
+    Sea(Sea&&) noexcept;
     Sea& operator==(Sea&&) noexcept;
 
     // has ships in the rectangle represented by two points, including on the boundary.

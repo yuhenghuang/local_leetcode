@@ -1,0 +1,50 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "clang++ build and debug active file",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${fileDirname}/ExeFiles/${fileBasenameNoExtension}",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "env": {
+        // "ASAN_OPTIONS" : "detect_leaks=0:verbosity=1:log_threads=1"
+        "ASAN_OPTIONS" : "detect_leaks=0"
+      },
+      "preLaunchTask": "C/C++: clang++ build active file for debug"
+    },
+    {
+      "name": "lldb-mi - Build and debug active file",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${fileDirname}/ExeFiles/${fileBasenameNoExtension}",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        {"name": "ASAN_OPTIONS", "value": "detect_leaks=0"}
+      ],
+      "externalConsole": false,
+      "MIMode": "lldb",
+      "setupCommands": [
+        {
+          "description": "Set pwd here because invalid cwd argument only works for gdb",
+          "text": "platform settings -w ${workspaceFolder}",
+          "ignoreFailures": false
+        },
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "C/C++: clang++ build active file for debug",
+      "miDebuggerPath": "/usr/bin/lldb-mi"
+    }
+  ]
+}

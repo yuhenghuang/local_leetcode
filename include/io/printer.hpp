@@ -107,6 +107,14 @@ universal_printer<std::vector<Tp>, 1UL>::operator()(const std::vector<Tp>& res) 
 
   std::cout << '[';
   for (size_t i = 0; i < n; ++i) {
+
+#ifdef _LL_PRINT_ARRAY_MAX_LENGTH
+    if (i == _LL_PRINT_ARRAY_MAX_LENGTH) {
+      std::cout << "..." << n - i << " more elements";
+      break;
+    }
+#endif
+
     print(res[i]);
 
     if (i < n - 1)
@@ -127,6 +135,13 @@ universal_printer<std::vector<Tp>, 2UL>::operator()(const std::vector<Tp>& res) 
     
 #ifndef _LL_FLATTEN_2D
     if (i > 0) std::cout << ' ';
+#endif
+
+#ifdef _LL_PRINT_ARRAY_MAX_LENGTH
+    if (i == _LL_PRINT_ARRAY_MAX_LENGTH) {
+      std::cout << "..." << n - i << " more elements";
+      break;
+    }
 #endif
 
     print(res[i]);

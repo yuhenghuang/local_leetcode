@@ -29,6 +29,8 @@
 // #define _LL_INPUT_DIR "Inputs"
 // #define _LL_INPUT_EXT "txt"
 
+// #define _LL_PRINT_ARRAY_MAX_LENGTH 100
+
 #include <set>
 #include <climits>
 #include <numeric>

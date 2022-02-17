@@ -167,6 +167,9 @@ execx(const std::string& path,
   double exec_time = 0; // execution time
   while (getline(f, line)) {
 
+    if (line.front() == '#')
+      continue;
+
     // parse input file (methods and arguments)
 
     param_range range = find_param_range<std::vector<std::string>>()(line, 0);
@@ -235,6 +238,9 @@ execs(const std::string& path,
   std::string line;
   double exec_time = 0; // execution time
   while (getline(f, line)) {
+
+    if (line.front() == '#')
+      continue;
 
     exec_time += cls(method_name, line);
 

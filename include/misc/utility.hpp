@@ -135,7 +135,7 @@ class param_iterator {
 
 
 /**
- * @brief generate path to input file given input file's directory, extention and cpp file's path
+ * @brief generate path to input file given input file's directory, extension and cpp file's path
  * 
  * @param dir directory of input file
  * @param input_ext extention of input file
