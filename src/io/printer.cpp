@@ -229,6 +229,58 @@ universal_printer<QuadNode*>::operator()(QuadNode* root) {
 
 
 void
+universal_printer<NaryTreeNode*>::operator()(NaryTreeNode* root) {
+  std::cout << '[';
+
+  // count of non-null nodes in current and next level
+  int m, n = 0;
+
+  std::queue<NaryTreeNode*> q;
+  if (root) {
+    std::cout << root->val;
+
+    if (!root->children.empty())
+      std::cout << ", null";
+
+    for (NaryTreeNode*& child : root->children) {
+      std::cout << ", " << child->val;
+
+      q.push(child);
+      n += child->children.size();
+    }
+
+    if (n > 0)
+      std::cout << ", null";
+  }
+
+  while (!q.empty()) {
+    m = n;
+    n = 0;
+
+    int N = q.size();
+    while (N--) {
+      root = q.front();
+      q.pop();
+
+      --m;
+
+      for (NaryTreeNode*& child : root->children) {
+        std::cout << ", " << child->val;
+
+        q.push(child);
+        n += child->children.size();
+      }
+
+      if (m > 0 || n > 0)
+        std::cout << ", null";
+    }
+  }
+
+  std::cout << ']';
+}
+
+
+void
 universal_printer<NaryGraphNode*>::operator()(NaryGraphNode* node) {
   NaryGraphNode* nodes[101] = {0};
   std::unordered_map<NaryGraphNode*, int> m;

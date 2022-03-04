@@ -69,6 +69,19 @@ find_node_in_bst(TreeNode* root, int val) {
 }
 
 
+inline 
+void 
+intersect_linked_lists_impl(ListNode* headA, ListNode* headB, int skipA, int skipB) {
+  for (int i = 0; i < skipA; ++i)
+    headA = headA->next;
+
+  for (int i = 1; i < skipB; ++i)
+    headB = headB->next;
+
+  headB->next = headA;
+}
+
+
 } // end of internal
 
 
@@ -177,17 +190,6 @@ create_cycle(ListNode* head, int pos) {
   return head;
 }
 
-inline 
-void 
-intersect_linked_lists_impl(ListNode* headA, ListNode* headB, int skipA, int skipB) {
-  for (int i = 0; i < skipA; ++i)
-    headA = headA->next;
-
-  for (int i = 1; i < skipB; ++i)
-    headB = headB->next;
-
-  headB->next = headA;
-}
 
 void 
 intersect_linked_lists(ListNode* headA, ListNode* headB, int skipA, int skipB) {
@@ -197,9 +199,9 @@ intersect_linked_lists(ListNode* headA, ListNode* headB, int skipA, int skipB) {
   assert((skipA > 0 || skipB > 0));
 
   if (skipB == 0)
-    intersect_linked_lists_impl(headB, headA, skipB, skipA);
+    internal::intersect_linked_lists_impl(headB, headA, skipB, skipA);
   else
-    intersect_linked_lists_impl(headA, headB, skipA, skipB);
+    internal::intersect_linked_lists_impl(headA, headB, skipA, skipB);
 }
 
 

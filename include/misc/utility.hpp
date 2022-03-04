@@ -205,9 +205,9 @@ int find_index(ListNode* head, ListNode* node);
 ListNode* create_cycle(ListNode* head, int pos);
 
 /**
- * @brief Intersect linked lists after skip first several.
+ * @brief Intersect linked lists after skip first several nodes (given by two parameters).
  *   The implementation keeps nodes in linked list A as intersection if both skips are positive.
- *   Two skips shall not both be 0 (i.e. two lists are identical).
+ *   Two skips shall not both be 0 (i.e. no intersection occurs).
  * 
  * @param headA head of linked list A
  * @param headB head of linked list B

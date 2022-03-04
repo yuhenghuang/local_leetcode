@@ -31,6 +31,7 @@
 
 // #define _LL_PRINT_ARRAY_MAX_LENGTH 100
 
+#include <array>
 #include <set>
 #include <climits>
 #include <numeric>

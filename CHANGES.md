@@ -1,4 +1,14 @@
 ------------------------------------------------------------------------------
+2022-03-04
+
+The document details the changes between this version, local leetcode 0.9.2.1 and previous version, local leetcode 0.9.1.1.
+
+- add printer for type `NaryTreeNode`
+
+- minor fixes on function documentation
+
+
+------------------------------------------------------------------------------
 2022-02-21
 
 The document details the changes between this version, local leetcode 0.9.1.1 and previous version, local leetcode 0.9.1.0.
