@@ -151,6 +151,75 @@ universal_parser<TernaryTreeNode*>::operator()(const std::string& s) const {
 }
 
 
+RandomTreeNode*
+universal_parser<RandomTreeNode*>::operator()(const std::string& s) const {
+  // null random pointer to -1
+  std::string line = regex_replace(s, std::regex("null"), "-1");
+
+  // use nested integer to save parsed vector
+  NestedInteger ni = universal_parser<NestedInteger>()(line);
+
+  // size of tree
+  size_t n = ni.getList().size();
+
+  if (n == 0)
+    return nullptr;
+
+  // size of null nodes
+  size_t u = 0;
+  const std::vector<NestedInteger>& ls = ni.getList();
+
+  for (const NestedInteger& node : ls)
+    if (node.isInteger())
+      ++u;
+
+  RandomTreeNode* root = new RandomTreeNode[n - u];
+
+  RandomTreeNode* nodes[n];
+
+  RandomTreeNode* node = root;
+
+  for (size_t i = 0; i < n; ++i) {
+    if (ls[i].isInteger())
+      nodes[i] = nullptr;
+    else {
+      node->val = ls[i].getList().front().getInteger();
+      nodes[i] = node++;
+    }
+  }
+
+  // random index
+  int ri = ls.front().getList().back().getInteger();
+
+  if (ri >= 0)
+    root->random = nodes[ri];
+
+  RandomTreeNode** iter = &nodes[0];
+  bool left = true;
+  for (size_t i = 1; i < n; ++i) {
+    // set random pointer
+    if (nodes[i] != nullptr) {
+      ri = ls[i].getList().back().getInteger();
+
+      if (ri >= 0)
+        nodes[i]->random = nodes[ri];
+    }
+
+    // this loop is always valid because it runs slower than `i`
+    while (*iter == nullptr)
+      ++iter;
+
+    if (left)
+      (*iter)->left = nodes[i];
+    else 
+      (*iter++)->right = nodes[i];
+
+    left = !left;
+  }
+
+  return root;
+}
+
 
 QuadNode*
 universal_parser<QuadNode*>::operator()(const std::string& s) const {

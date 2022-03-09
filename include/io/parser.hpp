@@ -58,6 +58,7 @@ template <> struct universal_parser<uint32_t> { uint32_t operator()(const std::s
 
 template <> struct universal_parser<TreeNode*> { TreeNode* operator()(const std::string&) const; };
 template <> struct universal_parser<TernaryTreeNode*> { TernaryTreeNode* operator()(const std::string&) const; };
+template <> struct universal_parser<RandomTreeNode*> { RandomTreeNode* operator()(const std::string&) const; };
 template <> struct universal_parser<QuadNode*> { QuadNode* operator()(const std::string&) const; };
 template <> struct universal_parser<NaryTreeNode*> { NaryTreeNode* operator()(const std::string&) const; };
 

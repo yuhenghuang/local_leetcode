@@ -78,6 +78,7 @@ template <> struct universal_printer<bool> { void operator()(const bool); };
 // tree
 template <> struct universal_printer<TreeNode*> { void operator()(TreeNode*); };
 template <> struct universal_printer<TernaryTreeNode*> { void operator()(TernaryTreeNode*); };
+template <> struct universal_printer<RandomTreeNode*> { void operator()(RandomTreeNode*); };
 template <> struct universal_printer<QuadNode*> { void operator()(QuadNode*); };
 template <> struct universal_printer<NaryTreeNode*> { void operator()(NaryTreeNode*); };
 

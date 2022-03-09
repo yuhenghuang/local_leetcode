@@ -101,13 +101,13 @@ Use `ln -s` or update `ld` configurations to make the library to be loaded at ru
 
 To avoid the standard library of `msvc`, which is not completely open source, it's better to install gnu/llvm on windows.
 
-After testing several approaches on windows, *msys2* is recommended because of it's less likely to encounter unsolvable bugs.
+After testing several approaches on windows, *msys2* is recommended because it's less likely to encounter unsolvable bugs.
 
 As stated in the requirements, from *msys2*, the following libraries/tools are needed
 
 - clang-toolchain (comes with clang targeted to gnu)
   - libraries should come with the toolchain
-- ninja (or other build tool)
+- ninja (or other preferred build tool)
 
 After other steps like setting `PATH`, one can now start building
 

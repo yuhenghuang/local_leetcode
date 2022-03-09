@@ -75,6 +75,20 @@ print_linked_list(SinglyListNode* head) {
   std::cout << ']';
 }
 
+
+inline
+void
+print_random_tree_node(RandomTreeNode* node, int ri) {
+  std::cout << '[' << node->val;
+
+  if (ri >= 0) 
+    std::cout << ", " << ri;
+  else
+    std::cout << ", null";
+
+  std::cout << ']';
+}
+
 } // end of internal
 
 
@@ -142,6 +156,66 @@ universal_printer<TreeNode*>::operator()(TreeNode* root) {
         std::cout << ", null";
     }
 
+  }
+
+  std::cout << ']';
+}
+
+
+void
+universal_printer<RandomTreeNode*>::operator()(RandomTreeNode* root) {
+  // index, node
+  std::vector<RandomTreeNode*> vec;
+
+  // count of non-null nodes in current and next level
+  int m, n = root ? 1 : 0;
+
+  std::queue<RandomTreeNode*> q;
+  q.push(root);
+
+  while (!q.empty()) {
+    m = n;
+    n = 0;
+
+    int N = q.size();
+    while (N--) {
+      root = q.front();
+      q.pop();
+
+      if (root) {
+        --m;
+
+        vec.push_back(root);
+
+        if (root->left) ++n;
+        if (root->right) ++n;
+
+        q.push(root->left);
+        q.push(root->right);
+      }
+      else if (m > 0 || n > 0) 
+        vec.push_back(nullptr);
+    }
+  }
+
+
+  std::unordered_map<RandomTreeNode*, int> node2idx;
+  for (int i = 0; i < vec.size(); ++i)
+    if (vec[i])
+      node2idx[vec[i]] = i;
+
+  std::cout << '[';
+
+  if (!vec.empty())
+    internal::print_random_tree_node(vec.front(), vec.front()->random ? node2idx[vec.front()->random] : -1);
+
+  for (int i = 1; i < vec.size(); ++i) {
+    if (vec[i]) {
+      std::cout << ", ";
+      internal::print_random_tree_node(vec[i], vec[i]->random ? node2idx[vec[i]->random] : -1);
+    }
+    else
+      std::cout << ", null";
   }
 
   std::cout << ']';

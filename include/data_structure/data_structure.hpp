@@ -39,6 +39,9 @@ struct TernaryTreeNode;
 // n-ary tree node (single root)
 struct NaryTreeNode;
 
+// binary tree node with an extra edge to random node in the ree
+struct RandomTreeNode;
+
 // n-ary graph (no root, undirected)
 struct NaryGraphNode;
 
@@ -99,6 +102,21 @@ struct TernaryTreeNode {
 
   TernaryTreeNode(int _val, TernaryTreeNode* _left, TernaryTreeNode* _right, TernaryTreeNode* _next)
     : val(_val), left(_left), right(_right), next(_next) {}
+};
+
+
+struct RandomTreeNode {
+  int val;
+
+  RandomTreeNode* left;
+  RandomTreeNode* right;
+  RandomTreeNode* random;
+
+  RandomTreeNode() : val(0), left(nullptr), right(nullptr), random(nullptr) {}
+
+  RandomTreeNode(int x) : val(x), left(nullptr), right(nullptr), random(nullptr) {}
+
+  RandomTreeNode(int x, RandomTreeNode* left, RandomTreeNode* right, RandomTreeNode* random) : val(x), left(left), right(right), random(random) {}
 };
 
 

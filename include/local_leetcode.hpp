@@ -60,6 +60,10 @@ using ll::Iterator;
 #ifdef TERNARY_TREE_NODE
   using Node = ll::TernaryTreeNode;
 #endif
+#ifdef RANDOM_TREE_NODE
+  using Node = ll::RandomTreeNode;
+  using NodeCopy = ll::RandomTreeNode;
+#endif
 #ifdef NARY_TREE_NODE
   using Node = ll::NaryTreeNode;
 #endif
