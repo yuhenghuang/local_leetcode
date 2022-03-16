@@ -21,6 +21,7 @@
  * 
  */
 
+#include <type_traits>
 
 #ifndef _LL_PROPERTY_HPP
 #define _LL_PROPERTY_HPP
@@ -38,10 +39,11 @@ namespace ll {
  * @tparam Setter member function pointer to setter. null pointer by default
  */
 template <
-  typename Tp, 
+  typename Tp, // either value_type of const valut_type&
   typename Cp,
   Tp (Cp::*Getter)() const,
-  Tp& (Cp::*Setter)(const Tp&) = nullptr
+  // ...Setter is supposed to return value_type& regardless of Tp. const Tp& is always const value_type&
+  std::remove_const_t<std::remove_reference_t<Tp>>& (Cp::*Setter)(const Tp&) = nullptr 
 >
 class property {
   private:
@@ -51,7 +53,7 @@ class property {
 
   public:
     typedef Cp class_type;
-    typedef Tp value_type;
+    typedef std::remove_const_t<std::remove_reference_t<Tp>> value_type;
 
     property(class_type* _ptr): ptr(_ptr) { }
 
@@ -81,7 +83,7 @@ class property {
 
 
 #define _LL_FRIEND_PROPERTY \
-template <typename Tp, typename Cp, Tp (Cp::*Getter)() const, Tp& (Cp::*Setter)(const Tp&)> friend class property;
+template <typename Tp, typename Cp, Tp (Cp::*Getter)() const, std::remove_const_t<std::remove_reference_t<Tp>>& (Cp::*Setter)(const Tp&)> friend class property;
 
 
 } // end of ll

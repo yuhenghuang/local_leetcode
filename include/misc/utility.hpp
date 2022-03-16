@@ -45,16 +45,12 @@ class param_range {
     typedef param_range self;
     
     size_t length() const { return j - i; }
-
-
-    typedef property<size_t, self, &param_range::length> length_property;
     
   public:
     size_t i; // start index, inclusive
     size_t j; // end index, exclusive
 
-    // size_t, length property
-    length_property l;
+    property<size_t, self, &param_range::length> l; // size_t, length property;
 
     param_range(size_t _i = 0, size_t _j = 0): 
       i(_i), j(_j), l(this) 
@@ -104,7 +100,7 @@ struct find_param_range<NestedInteger> { param_range operator()(const std::strin
 /**
  * @brief iterate over an array (string representation) of a certain type, "[...]"
  * 
- * @tparam Tp type of the parameter
+ * @tparam Tp type of the array elements
  */
 template <typename Tp>
 class param_iterator {
@@ -151,15 +147,15 @@ path_to_input_file(const char* dir,
 /**
  * @brief find the node given value in a tree
  * 
- * @param root 
+ * @param root root of the tree
  * @param val value
- * @param is_bst if it's BST
+ * @param is_bst if the tree is BST
  * @return TreeNode* node or nullptr if not found
  */
 TreeNode* find_node(TreeNode* root, int val, bool is_bst = false);
 
 /**
- * @brief find the node given in a linked list
+ * @brief find the node given value in a linked list
  * 
  * @param head head of the linked list
  * @param val value

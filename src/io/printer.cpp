@@ -76,6 +76,8 @@ print_linked_list(SinglyListNode* head) {
 }
 
 
+// pring single non-null random tree node.
+// either [val, random index] or [val, null]
 inline
 void
 print_random_tree_node(RandomTreeNode* node, int ri) {
@@ -198,21 +200,23 @@ universal_printer<RandomTreeNode*>::operator()(RandomTreeNode* root) {
     }
   }
 
-
+  // node, index
   std::unordered_map<RandomTreeNode*, int> node2idx;
   for (int i = 0; i < vec.size(); ++i)
     if (vec[i])
       node2idx[vec[i]] = i;
 
+  node2idx[nullptr] = -1;
+
   std::cout << '[';
 
   if (!vec.empty())
-    internal::print_random_tree_node(vec.front(), vec.front()->random ? node2idx[vec.front()->random] : -1);
+    internal::print_random_tree_node(vec.front(), node2idx[vec.front()->random]);
 
   for (int i = 1; i < vec.size(); ++i) {
     if (vec[i]) {
       std::cout << ", ";
-      internal::print_random_tree_node(vec[i], vec[i]->random ? node2idx[vec[i]->random] : -1);
+      internal::print_random_tree_node(vec[i], node2idx[vec[i]->random]);
     }
     else
       std::cout << ", null";

@@ -1,9 +1,11 @@
 ------------------------------------------------------------------------------
-2022-03-09
+2022-03-16
 
 The document details the changes between this version, local leetcode 0.9.3.1 and previous version, local leetcode 0.9.2.1.
 
-- add parser and printer for type `RandomTreeNode` (e.g. binary tree node with one random pointer to a node in the tree)
+- add parser and printer for type `RandomTreeNode` (i.e. binary tree node with one random pointer to a node in the tree)
+
+- fix the logic mistake of the type of `Setter` in class `property`.
 
 - minor fixes on function documentation
 
