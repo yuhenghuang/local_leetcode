@@ -72,16 +72,17 @@ Check the directory [*examples*](https://github.com/yuhenghuang/local_leetcode/t
 ## Build
 
 * Requirements
-  * clang++11 or higher
+  * cmake (3.16.3 or higher)
+  * clang++ (11 or higher)
   * libc++-dev libc++abi-dev (to use std provided by llvm)
   * build tool. `make` on linux or `ninja` (or alike) on windows
 * Other details
   * to build examples, please add `-DBUILD_EXAMPLES=on` in cmake arguments
   * it's not recommended to install the library in the system paths because of its limited usage
-  * please use `ln -s` or `mklink` to achieve similar goals.
+  * please use soft link (`ln -s` on unix or `mklink` on windows) to achieve similar goals.
 
 
-#### Unix-like OS
+### Unix-like OS
 
 The requirements should be almost (already) be met on most unix-like OS. Thus following 
 
@@ -97,7 +98,7 @@ The built library should be *lib/liblocal_leetcode.so* (or *lib/liblocal_leetcod
 
 Use `ln -s` or update `ld` configurations to make the library to be loaded at runtime.
 
-#### Windows (msys2)
+### Windows (msys2)
 
 To avoid the standard library of `msvc`, which is not completely open source, it's better to install gnu/llvm on windows.
 
@@ -126,7 +127,7 @@ Use `mklink` to put *.dll* file in the directory of executables or set `PATH` to
 
 ## Special Cases
 
-##### Node types
+#### Node types
 
 To enable correct `Node` for specific problem from various types, one needs to define macro before the header file.
 
@@ -140,7 +141,7 @@ For example, to use a tree node with four children as typename `Node`,
 For more definition of marcos, see the content of the header file, [*include/local_leetcode.hpp*](https://github.com/yuhenghuang/local_leetcode/blob/main/include/local_leetcode.hpp)
 
 
-##### Inconsistent input type
+#### Inconsistent input type
 
 The macro `EXECS` supports overload.
 
@@ -150,7 +151,7 @@ The syntax is
 EXECS(Solution::method, return_type, (arg_types, ...));
 ```
 
-##### non-trivial constructor of class `Solution`
+#### non-trivial constructor of class `Solution`
 
 The library internally distinguishes *solution* and *design* types of problems by checking whether the class is trivially constructable.
 
@@ -165,9 +166,9 @@ To enforce the behavior of the library under the condition where explicit constr
 
 before including the library header file.
 
-##### memory leaking of return pointer (optional)
+#### memory leaking of return pointer (optional)
 
-This is an optional feature which release memories of return pointer, thus avoid memory leaking. The module is implemented by heavy meta-programming techniques and should cover most common data types (e.g. tree). Pointers in form of vector, e.g. `std::vector<Node*>` are also supported.
+This is an optional feature which releases the memory of return pointer, thus avoid memory leaking. The module is implemented by heavy meta-programming techniques and should cover most common data types (e.g. tree). Pointers in form of vector, e.g. `std::vector<Node*>` are also supported.
 
 To enable it, 
 
@@ -178,12 +179,12 @@ To enable it,
 
 For more details of the supported data types of the feature, see the following section.
 
-### destroy (delete) pointers (optional)
+#### destroy (delete) pointers (optional)
 
 
 This function, `ll::destroy(void *)` from [*include/io/destroyer.hpp*](https://github.com/yuhenghuang/local_leetcode/blob/main/include/io/destroyer.hpp),  is used to release memories of the interim objects in the heap.
 
-The original purpose of the function is to manage the memory perfectly by the user him/herself, while it came to light that the goal was impossible during the development and tests. The function remains specifically for someone who wants to manage the memory by oneself without setting `ASAN_OPTIONS=detect_leaks=0`.
+The original purpose of the function is to manage the memory perfectly by the user him/herself, while it came to light that the task was impossible during the development and tests. The function remains specifically for someone who wants to manage the memory by oneself without setting `ASAN_OPTIONS=detect_leaks=0`.
 
 Supported objects (`Node`)
 

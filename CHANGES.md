@@ -1,4 +1,16 @@
 ------------------------------------------------------------------------------
+2022-03-22
+
+The document details the changes between this version, local leetcode 0.9.3.2 and previous version, local leetcode 0.9.3.1.
+
+- add move constructor and assignment for type `NestedInteger`
+
+- migrate from raw pointers to `std::unique_ptr` in file *include/core/classes.hpp* (not *input_parameters.hpp*) to simplify allocate and release of memories.
+
+- minor fixes on *README.md*
+
+
+------------------------------------------------------------------------------
 2022-03-16
 
 The document details the changes between this version, local leetcode 0.9.3.1 and previous version, local leetcode 0.9.2.1.

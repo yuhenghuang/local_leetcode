@@ -245,6 +245,13 @@ class NestedInteger {
     // Constructor initializes a single integer.
     NestedInteger(int value);
 
+    // user-defined constructors and assignments, unofficial
+    NestedInteger(const NestedInteger&) = default;
+    NestedInteger& operator=(const NestedInteger&) = default;
+
+    NestedInteger(NestedInteger&&) noexcept;
+    NestedInteger& operator=(NestedInteger&&) noexcept;
+
     // Return true if this NestedInteger holds a single integer, rather than a nested list.
     bool isInteger() const;
 

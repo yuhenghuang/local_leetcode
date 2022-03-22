@@ -31,6 +31,20 @@ NestedInteger::NestedInteger(): is_integer(false) { }
 
 NestedInteger::NestedInteger(int value): is_integer(true), val(value) { }
 
+NestedInteger::NestedInteger(NestedInteger&& ni) noexcept :
+  is_integer(ni.is_integer), val(ni.val), 
+  data(std::move(ni.data))
+{ }
+
+NestedInteger& 
+NestedInteger::operator=(NestedInteger&& ni) noexcept {
+  is_integer = ni.is_integer;
+  val = ni.val;
+  data = std::move(ni.data);
+
+  return *this;
+}
+
 bool 
 NestedInteger::isInteger() const { 
   return is_integer;

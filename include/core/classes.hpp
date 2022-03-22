@@ -29,6 +29,8 @@
 #include "../io/printer.hpp"
 #include "../io/destroyer.hpp"
 
+#include <memory>
+
 
 namespace ll {
 
@@ -155,16 +157,20 @@ class universal_class {
     args_tuple_param_type inputs;
 
     // pointer to class used in all methods
-    class_type* ptr;
+    std::unique_ptr<class_type> ptr;
 
     class_factory_ptr factory;
-    std::vector<method_class_base<class_type>*> methods;
+    std::vector<std::unique_ptr<method_class_base<class_type>>> methods;
 
     template <size_t... Is>
-    void factory_helper(std::index_sequence<Is...>) { ptr = (*factory)(std::get<Is>(inputs) ...); }
+    void factory_helper(std::index_sequence<Is...>) {
+      // assigning raw pointer to unique_ptr is not allowed...
+      ptr = std::unique_ptr<class_type>( (*factory)(std::get<Is>(inputs) ...) ); 
+    }
 
+    /*
     // delete ptr
-    void release_object() { if (ptr != nullptr) delete ptr; }
+    void release_object() { delete ptr; }
 
     // delete ptr and methods
     void release_memory() {
@@ -172,16 +178,19 @@ class universal_class {
 
       // be careful of memory leak...
       for (auto& m : methods)
-        if (m != nullptr) 
-          delete m;
+        delete m;
 
       methods.clear();
     }
+    */
 
   public:
     universal_class() = delete;
 
-    explicit universal_class(Factory _factory): ptr(nullptr), factory(_factory) { }
+    explicit universal_class(Factory _factory): factory(_factory) { }
+
+    // the reason that copy/move construction/assignment are deleted is
+    // UNNECESSARY
 
     universal_class(const self&) = delete;
     self& operator=(const self& x) = delete;
@@ -225,7 +234,7 @@ class universal_class {
      */
     double operator()(const std::string& name, const std::string& args);
 
-    ~universal_class() { release_memory(); }
+    // ~universal_class() { release_memory(); }
 };
 
 
@@ -257,7 +266,7 @@ void generate_params(Tuple& params,
   size_t j = 0;
   (
     (std::get<Is>(params) = 
-      internal::parse_next_arg<
+      parse_next_arg<
         typename std::tuple_element_t<Is, Tuple>::type // tuple_element_t<> = input_parameter
       >(j, s)
     ), 
@@ -287,7 +296,7 @@ method_class<MemFn>::operator()(class_type* ptr, const std::string& s) const {
 template <class Factory>
 auto
 universal_class<Factory>::initialize_or_replace(const std::string& s) -> self& {
-  release_object();
+  // release_object();
 
   internal::generate_params(inputs, s, std::make_index_sequence<args_size>{});
   
@@ -301,9 +310,9 @@ template <typename MemFn, typename>
 inline
 auto
 universal_class<Factory>::add_method(MemFn fn, const std::string& s) -> self& {
-  methods.push_back(
-    new method_class<MemFn>(fn, s)
-  );
+  // methods.emplace_back( new method_class<MemFn>(fn, s) );
+
+  methods.push_back( std::make_unique<method_class<MemFn>>(fn, s) );
   return *this;
 }
 
@@ -313,7 +322,7 @@ universal_class<Factory>::operator()(const std::string& name, const std::string&
   method_class_base<class_type>* method = nullptr;
   for (auto& m : methods)
     if (m->get_name() == name) {
-      method = m;
+      method = m.get();
       break;
     }
 
@@ -322,7 +331,7 @@ universal_class<Factory>::operator()(const std::string& name, const std::string&
     abort();
   }
   
-  return method->operator()(ptr, args);
+  return method->operator()(ptr.get(), args);
 }
 
 
