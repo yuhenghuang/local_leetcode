@@ -1,5 +1,5 @@
 ---
-name: Feature request
+name: Support for problem
 about: Support for problem no.**xxx**
 title: Support for problem no.**xxx**
 labels: enhancement
