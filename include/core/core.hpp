@@ -145,6 +145,7 @@ execx(const std::string& path,
     typename fn_ptr_traits<MemFns>::class_type ...
   >::type class_type;
 
+  static_assert(!std::is_void<class_type>::value, "all methods must be from the same class!");
   static_assert(std::is_constructible<class_type, Args...>::value, "no specified ctor exists!");
 
   typedef class_type* (*factory_type)(Args&& ...);

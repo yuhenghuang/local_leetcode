@@ -145,13 +145,15 @@ struct all : public std::is_same<
 { };
 
 
-// check if all Types are the same
+// check if all Types are the same Tp
+// true -> type = Tp, value = true
+// false -> type = void, value = false
 template <typename... Types> struct all_same;
 // end condition
 template <typename Tp> struct all_same<Tp> : public std::true_type { typedef Tp type; };
 
 template <typename Tp, typename Up, typename... Types>
-struct all_same<Tp, Up, Types...> : public std::false_type { };
+struct all_same<Tp, Up, Types...> : public std::false_type { typedef void type; };
 
 template <typename Tp, typename... Types>
 struct all_same<Tp, Tp, Types...> : public all_same<Tp, Types...> { };

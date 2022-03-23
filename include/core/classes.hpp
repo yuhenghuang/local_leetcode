@@ -160,7 +160,7 @@ class universal_class {
     std::unique_ptr<class_type> ptr;
 
     class_factory_ptr factory;
-    std::vector<std::unique_ptr<method_class_base<class_type>>> methods;
+    std::vector< std::unique_ptr<method_class_base<class_type>> > methods;
 
     template <size_t... Is>
     void factory_helper(std::index_sequence<Is...>) {
@@ -242,7 +242,8 @@ namespace internal {
 
 // parse next Tp in s after j, then update j to the end to Tp
 template <typename Tp>
-inline Tp 
+inline 
+Tp 
 parse_next_arg(size_t& j , const std::string& s) {
   skip_delimiters(s, j);
 
@@ -262,7 +263,7 @@ void generate_params(Tuple& params,
                      std::index_sequence<Is...>) 
 {
   // ...
-  // j is a global index of s, indicating end of an argument
+  // j is a global index of s, indicating end of previous argument
   size_t j = 0;
   (
     (std::get<Is>(params) = 
@@ -310,9 +311,9 @@ template <typename MemFn, typename>
 inline
 auto
 universal_class<Factory>::add_method(MemFn fn, const std::string& s) -> self& {
-  // methods.emplace_back( new method_class<MemFn>(fn, s) );
-
-  methods.push_back( std::make_unique<method_class<MemFn>>(fn, s) );
+  methods.push_back( 
+    std::make_unique<method_class<MemFn>>(fn, s) 
+  );
   return *this;
 }
 
