@@ -109,7 +109,7 @@ path_to_input_file(const char* dir,
 
   std::string path = dir;
 
-  // as windows supports '/' in many compilers, the seperator is determined actually by user input...
+  // as windows supports '/' for many compilers, the seperator is determined actually by user input in compilation arguments
   if (!path.empty() && (path.back() != '\\') && (path.back() != '/'))
     path.push_back(_LL_SEPERATOR);
 

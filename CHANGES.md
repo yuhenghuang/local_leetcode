@@ -5,9 +5,9 @@ The document details the changes between this version, local leetcode 0.9.3.2 an
 
 - add move constructor and assignment for type `NestedInteger`
 
-- migrate from raw pointers to `std::unique_ptr` in file *include/core/classes.hpp* (not *input_parameters.hpp*) to simplify allocate and release of memories.
+- migrate from raw pointers to `std::unique_ptr` in file *include/core/classes.hpp* (not *input_parameters.hpp*) to simplify allocation and release of memories.
 
-- check explicitly whether all methods are from the same class for *Design* problems by `static_assert` with error message.
+- check explicitly whether all methods are from the same class for *Design* problems by `static_assert` with pertinent error message.
 
 - minor fixes on *README.md*
 

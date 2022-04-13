@@ -35,7 +35,7 @@ namespace ll {
  * @brief wrap up input parameters, works as smart pointer
  * 
  * @tparam Tp input type (possibly with const, reference, pointer)
- * @tparam IsVecofPtrs is input type a vector of pointers (default is defined misc/traits.hpp)
+ * @tparam IsVecofPtrs is input type a vector of pointers (default is declarad in misc/traits.hpp)
  */
 template <
   typename Tp, 

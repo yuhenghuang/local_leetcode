@@ -205,7 +205,7 @@ universal_parser<RandomTreeNode*>::operator()(const std::string& s) const {
         nodes[i]->random = nodes[ri];
     }
 
-    // this loop is always valid because it runs slower than `i`
+    // this loop is always valid because iter runs slower than `i`
     while (*iter == nullptr)
       ++iter;
 
