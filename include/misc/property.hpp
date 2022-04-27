@@ -102,7 +102,7 @@ template <typename Tp, typename Cp, Tp (Cp::*Getter)() const, std::remove_const_
  * @brief property. read-only if 2nd template parameter is omitted.
  *   The implementation under c++17 simplifies the template parameters.
  *   The validation of template parameters (member function pointers) is done by static_assert inside class
- *   ~~todo: include cases of noexcept signature~~ done!...
+ *   ~~todo: include cases of volatile signature~~ done...
  * 
  * @tparam Getter member function pointer to getter
  * @tparam Setter member function pointer to setter. null pointer by default
@@ -140,14 +140,14 @@ class property {
     // assert Setter's type
     static_assert(
       std::disjunction<
-        std::is_same<typename fn_ptr_traits<decltype(Setter)>::fn_ptr_type, nullptr_t>, 
+        std::is_same<typename fn_ptr_traits<decltype(Setter)>::fn_ptr_raw_type, nullptr_t>, 
         std::conjunction<
-          std::is_same<typename fn_ptr_traits<decltype(Setter)>::fn_ptr_type, reference (class_type::*)(const_reference)>,
-          std::is_same<typename fn_ptr_traits<decltype(Setter)>::has_const, std::false_type>
+          std::is_same<typename fn_ptr_traits<decltype(Setter)>::fn_ptr_raw_type, reference (class_type::*)(const_reference)>,
+          negate<typename fn_ptr_traits<decltype(Setter)>::has_const>
         >
       >::value
       , 
-      "Setter must be compatible with Getter (either null or reference (class_type::*)(const_reference)) and has no const signature"
+      "Setter must be compatible with Getter (either null or reference (class_type::*)(const_reference)) [noexcept]"
     );
 
   private:

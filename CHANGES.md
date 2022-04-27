@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
-2022-03-23
+2022-04-28
 
 The document details the changes between this version, local leetcode 0.9.3.3 and previous version, local leetcode 0.9.3.2.
 
@@ -8,6 +8,8 @@ The document details the changes between this version, local leetcode 0.9.3.3 an
 - minor fixes on internal functions/classes and documents
 
 - update (simplify) the implementation of internal `property` to meet c++17 standard
+
+- update the internal function pointer traits
 
 
 ------------------------------------------------------------------------------

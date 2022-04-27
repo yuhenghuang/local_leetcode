@@ -96,69 +96,112 @@ template <
 class input_parameter;
 
 
+// remove const volatile noexcept
+template <class Fn>
+struct remove_fn_cv_noexcept;
+
+template <class Ret, class... Args>
+struct remove_fn_cv_noexcept<Ret (Args...)> {
+  typedef Ret (type)(Args...);
+};
+
+template <class Ret, class... Args>
+struct remove_fn_cv_noexcept<Ret (Args...) const> {
+  typedef Ret (type)(Args...);
+};
+
+template <class Ret, class... Args>
+struct remove_fn_cv_noexcept<Ret (Args...) volatile> {
+  typedef Ret (type)(Args...);
+};
+
+template <class Ret, class... Args>
+struct remove_fn_cv_noexcept<Ret (Args...) const volatile> {
+  typedef Ret (type)(Args...);
+};
+
+template <class Ret, class... Args>
+struct remove_fn_cv_noexcept<Ret (Args...) noexcept> {
+  typedef Ret (type)(Args...);
+};
+
+template <class Ret, class... Args>
+struct remove_fn_cv_noexcept<Ret (Args...) const noexcept> {
+  typedef Ret (type)(Args...);
+};
+
+template <class Ret, class... Args>
+struct remove_fn_cv_noexcept<Ret (Args...) volatile noexcept> {
+  typedef Ret (type)(Args...);
+};
+
+template <class Ret, class... Args>
+struct remove_fn_cv_noexcept<Ret (Args...) const volatile noexcept> {
+  typedef Ret (type)(Args...);
+};
+
+
+// fn_has_const
+template <class Fn>
+struct fn_has_const : public std::false_type { };
+
+template <class Ret, class... Args>
+struct fn_has_const<Ret (Args...) const> : public std::true_type { };
+
+template <class Ret, class... Args>
+struct fn_has_const<Ret (Args...) const noexcept> : public std::true_type { };
+
+
+// function type traits
+template <class Fn> struct fn_traits;
+
+template <class Ret, class... Args>
+struct fn_traits<Ret (Args...)> :
+  public std::integral_constant<size_t, sizeof...(Args)> 
+{
+  typedef Ret return_type;
+
+  typedef std::tuple<input_parameter<
+    typename remove_reference_to_pointer<Args>::type
+  > ...> args_tuple_param_type;
+
+  // extract arguments type by index
+  template <size_t I>
+  struct args_type {
+    typedef typename std::tuple_element<I, std::tuple<Args...>>::type type;
+  };
+};
+
+
 // function / class member function traits
 template <typename FnPtr> struct fn_ptr_traits;
 
+// member function pointer
+template <class Fn, class Cp>
+struct fn_ptr_traits<Fn Cp::*>:
+  public fn_traits<typename remove_fn_cv_noexcept<Fn>::type>
+{
+  typedef typename remove_fn_cv_noexcept<Fn>::type Cp::* fn_ptr_raw_type;
 
-// specialization for normal function
-template <typename Tp, typename... Args>
-struct fn_ptr_traits<Tp (*)(Args...)>
-  : public std::integral_constant<size_t, sizeof...(Args)> {
-  // ...
-  typedef Tp return_type;
-  typedef args_pack<Args...> args_type;
-
-  typedef std::tuple<input_parameter<
-    typename remove_reference_to_pointer<Args>::type
-  > ...> args_tuple_param_type;
-
-  typedef std::false_type has_const;
-};
-
-
-// specialization for member function
-template <typename Tp, class Cp, typename... Args>
-struct fn_ptr_traits<Tp (Cp::*)(Args...)>
-  : public std::integral_constant<size_t, sizeof...(Args)> {
-  // ...
-  typedef Tp return_type;
   typedef Cp class_type;
-  typedef args_pack<Args...> args_type;
-
-  typedef std::tuple<input_parameter<
-    typename remove_reference_to_pointer<Args>::type
-  > ...> args_tuple_param_type;
-
-  typedef std::false_type has_const;
-  // remove const and noexcept
-  typedef Tp (Cp::*fn_ptr_type)(Args...) ;
+  typedef fn_has_const<Fn> has_const;
 };
 
-
-// specialization for const member function
-template <typename Tp, class Cp, typename... Args>
-struct fn_ptr_traits<Tp (Cp::*)(Args...) const> : public fn_ptr_traits<Tp (Cp::*)(Args...)> {
-  typedef std::true_type has_const;
+// function pointer
+template <class Fn>
+struct fn_ptr_traits<Fn*>:
+  public fn_traits<typename remove_fn_cv_noexcept<Fn>::type>
+{
+  typedef typename remove_fn_cv_noexcept<Fn>::type* fn_ptr_raw_type;
+  typedef fn_has_const<Fn> has_const;
 };
-
-template <typename Tp, class Cp, typename... Args>
-struct fn_ptr_traits<Tp (Cp::*)(Args...) const noexcept> : public fn_ptr_traits<Tp (Cp::*)(Args...)> {
-  typedef std::true_type has_const;
-};
-
-template <typename Tp, class Cp, typename... Args>
-struct fn_ptr_traits<Tp (Cp::*)(Args...) noexcept> : public fn_ptr_traits<Tp (Cp::*)(Args...)> {
-  typedef std::false_type has_const;
-};
-
 
 // specialization for nullptr_t
 template <>
 struct fn_ptr_traits<nullptr_t>: 
-  public std::integral_constant<size_t, 0UL> {
-  //
-
-  typedef nullptr_t fn_ptr_type;
+  public std::integral_constant<size_t, 0UL> 
+{
+  typedef nullptr_t fn_ptr_raw_type;
   typedef std::false_type has_const;
 };
 
@@ -173,6 +216,13 @@ struct all : public std::is_same<
                       bool_dummies<((void)Preds, true) ...>
                     > 
 { };
+
+
+// negation of true_type or false_type
+template <typename PredType> struct negate;
+
+template <bool Pred>
+struct negate<std::bool_constant<Pred>> : public std::bool_constant<!Pred> { };
 
 
 // check if all Types are the same Tp
@@ -278,9 +328,9 @@ struct do_graph_category_impl {
   template <
     typename Tp, 
     typename = typename std::enable_if<
-      all<
-        std::is_same<Tp, decltype(std::declval<Tp&>()->left)>::value,
-        std::is_same<Tp, decltype(std::declval<Tp&>()->right)>::value
+      std::conjunction<
+        std::is_same<Tp, decltype(std::declval<Tp&>()->left)>,
+        std::is_same<Tp, decltype(std::declval<Tp&>()->right)>
       >::value
     >::type
   >
@@ -289,11 +339,11 @@ struct do_graph_category_impl {
   template <
     typename Tp, 
     typename = typename std::enable_if<
-      all<
-        std::is_same<Tp, decltype(std::declval<Tp&>()->topLeft)>::value,
-        std::is_same<Tp, decltype(std::declval<Tp&>()->topRight)>::value,
-        std::is_same<Tp, decltype(std::declval<Tp&>()->bottomLeft)>::value,
-        std::is_same<Tp, decltype(std::declval<Tp&>()->bottomRight)>::value
+      std::conjunction<
+        std::is_same<Tp, decltype(std::declval<Tp&>()->topLeft)>,
+        std::is_same<Tp, decltype(std::declval<Tp&>()->topRight)>,
+        std::is_same<Tp, decltype(std::declval<Tp&>()->bottomLeft)>,
+        std::is_same<Tp, decltype(std::declval<Tp&>()->bottomRight)>
       >::value
     >::type
   >
@@ -314,9 +364,9 @@ struct do_graph_category_impl {
     typename Tp,
     typename Up = decltype(std::declval<Tp&>()->neighbors),
     typename = typename std::enable_if<
-      all<
-        is_array<Up>::value,
-        std::is_same<Tp, typename remove_extent<Up>::type>::value
+      std::conjunction<
+        is_array<Up>,
+        std::is_same<Tp, typename remove_extent<Up>::type>
       >::value
     >::type
   >
