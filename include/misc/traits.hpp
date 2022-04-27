@@ -137,6 +137,7 @@ struct fn_ptr_traits<Tp (Cp::*)(Args...) const> : public fn_ptr_traits<Tp (Cp::*
 template <bool... > struct bool_dummies { };
 
 // if predicates are all true
+// todo: migrate to std::conjunction in the future
 template <bool... Preds>
 struct all : public std::is_same<
                       bool_dummies<Preds ...>, 

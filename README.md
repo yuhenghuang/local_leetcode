@@ -200,6 +200,33 @@ Supported objects (`Node`)
   - directed graph (nary tree) with `std::vector<Node*> children`
   - undirected graph with `std::vector<Node*> neighbors`
 
+
+## FAQ
+
+1. What are the purposes of the library when those websites provide online compilation and execution?
+
+- manage code and test cases in a local directory
+  - further manage alternative solutions in a *cpp* file
+- debug locally (this is the biggest plus)
+- use one's favorite IDE
+
+
+2. Why is built version of the library preferred to header-only one?
+
+- reduce compilation time of solutions drastically
+  - the exposure of STL symbols contributes (e.g. `std::vector<int>`)
+- reduce the size of compiled binary
+
+
+3. Why is the compiler specified as `Clang` and not other compilers?
+
+- in line with the instructions from the official site
+- same goes for the compilation flags, including *asan* flags
+
+
+For other more specific questions, the wiki will be available in the future.
+
+
 ## License
 
 The library is released under the GNU GLP-3.0 license.

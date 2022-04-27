@@ -1,6 +1,16 @@
 ------------------------------------------------------------------------------
 2022-03-23
 
+The document details the changes between this version, local leetcode 0.9.3.3 and previous version, local leetcode 0.9.3.2.
+
+- add *FAQ* section to *README.md*
+
+- minor fixes on internal functions/classes and documents
+
+
+------------------------------------------------------------------------------
+2022-03-23
+
 The document details the changes between this version, local leetcode 0.9.3.2 and previous version, local leetcode 0.9.3.1.
 
 - add move constructor and assignment for type `NestedInteger`

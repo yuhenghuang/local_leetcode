@@ -34,6 +34,90 @@
 
 namespace ll {
 
+
+/**
+ * @brief find the node given value in a tree
+ * 
+ * @param root root of the tree
+ * @param val value
+ * @param is_bst if the tree is BST
+ * @return TreeNode* node or nullptr if not found
+ */
+TreeNode* find_node(TreeNode* root, int val, bool is_bst = false);
+
+/**
+ * @brief find the node given value in a linked list
+ * 
+ * @param head head of the linked list
+ * @param val value
+ * @return ListNode* node or nullptr if not found
+ */
+ListNode* find_node(ListNode* head, int val);
+
+
+/**
+ * @brief is tree 2 the same as tree 1 in terms of value?
+ * 
+ * @param root1 tree 1
+ * @param root2 tree 2
+ * @return bool
+ */
+bool is_same(TreeNode* root1, TreeNode* root2);
+
+/**
+ * @brief is linked list 2 the same as linked list 1 in terms of value?
+ * 
+ * @param root1 list 1
+ * @param root2 list 2
+ * @return bool
+ */
+bool is_same(ListNode* head1, ListNode* head2);
+
+/**
+ * @brief find the index of node in a linked list
+ * 
+ * @param head head of the linked list
+ * @param node target node
+ * @return int index (0-base). -1 if not found
+ */
+int find_index(ListNode* head, ListNode* node);
+
+/**
+ * @brief link the tail to the node at index pos (0-base)
+ * 
+ * @param head head of the linked list
+ * @param pos index of the node to be linked by tail
+ * @return head after cycle created
+ */
+ListNode* create_cycle(ListNode* head, int pos);
+
+/**
+ * @brief Intersect linked lists after skip first several nodes (given by two parameters).
+ *   The implementation keeps nodes in linked list A as intersection if both skips are positive.
+ *   Two skips shall not both be 0 (i.e. no intersection occurs).
+ * 
+ * @param headA head of linked list A
+ * @param headB head of linked list B
+ * @param skipA num. of nodes skipped in A before intersection
+ * @param skipB num. of nodes skipped in B before intersection
+ */
+void intersect_linked_lists(ListNode* headA, ListNode* headB, int skipA, int skipB);
+
+namespace internal {
+
+/**
+ * @brief skip ' ' and ',' in string s
+ * 
+ * @param s string
+ * @param i index
+ */
+inline
+void 
+skip_delimiters(const std::string& s, size_t& i);
+
+} // end of internal
+
+
 /**
  * @brief contains start (i, inclusive) and end (j, exclusive) index of a parameter
  * 
@@ -143,88 +227,6 @@ path_to_input_file(const char* dir,
                    const std::string& input_ext, 
                    const std::string& cpp_path);
 
-
-/**
- * @brief find the node given value in a tree
- * 
- * @param root root of the tree
- * @param val value
- * @param is_bst if the tree is BST
- * @return TreeNode* node or nullptr if not found
- */
-TreeNode* find_node(TreeNode* root, int val, bool is_bst = false);
-
-/**
- * @brief find the node given value in a linked list
- * 
- * @param head head of the linked list
- * @param val value
- * @return ListNode* node or nullptr if not found
- */
-ListNode* find_node(ListNode* head, int val);
-
-
-/**
- * @brief is tree 2 the same as tree 1 in terms of value?
- * 
- * @param root1 tree 1
- * @param root2 tree 2
- * @return bool
- */
-bool is_same(TreeNode* root1, TreeNode* root2);
-
-/**
- * @brief is linked list 2 the same as linked list 1 in terms of value?
- * 
- * @param root1 list 1
- * @param root2 list 2
- * @return bool
- */
-bool is_same(ListNode* head1, ListNode* head2);
-
-/**
- * @brief find the index of node in a linked list
- * 
- * @param head head of the linked list
- * @param node target node
- * @return int index (0-base). -1 if not found
- */
-int find_index(ListNode* head, ListNode* node);
-
-/**
- * @brief link the tail to the node at index pos (0-base)
- * 
- * @param head head of the linked list
- * @param pos index of the node to be linked by tail
- * @return head after cycle created
- */
-ListNode* create_cycle(ListNode* head, int pos);
-
-/**
- * @brief Intersect linked lists after skip first several nodes (given by two parameters).
- *   The implementation keeps nodes in linked list A as intersection if both skips are positive.
- *   Two skips shall not both be 0 (i.e. no intersection occurs).
- * 
- * @param headA head of linked list A
- * @param headB head of linked list B
- * @param skipA num. of nodes skipped in A before intersection
- * @param skipB num. of nodes skipped in B before intersection
- */
-void intersect_linked_lists(ListNode* headA, ListNode* headB, int skipA, int skipB);
-
-namespace internal {
-
-/**
- * @brief skip ' ' and ',' in string s
- * 
- * @param s string
- * @param i index
- */
-inline
-void 
-skip_delimiters(const std::string& s, size_t& i);
-
-} // end of internal
 
 
 // scalar

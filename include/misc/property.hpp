@@ -33,13 +33,13 @@ namespace ll {
  *   The implementation is not perfect because one has to declare the 
  *   property as friend in Cp, and do other chores (e.g. in ctors or assignments)...
  * 
- * @tparam Tp type of the property
+ * @tparam Tp type of the property, be either value_type or const valut_type&
  * @tparam Cp type of the class
  * @tparam Getter member function pointer to getter
  * @tparam Setter member function pointer to setter. null pointer by default
  */
 template <
-  typename Tp, // either value_type of const valut_type&
+  typename Tp, // either value_type or const valut_type&
   typename Cp,
   Tp (Cp::*Getter)() const,
   // ...Setter is supposed to return value_type& regardless of Tp. const Tp& is always const value_type&
@@ -71,7 +71,7 @@ class property {
     };
 
     // get
-    operator value_type() const { return (ptr->*Getter)(); }
+    operator Tp() const { return (ptr->*Getter)(); }
 
     // set, undefined-behavior if the property is read-only (Setter is nullptr)
     value_type& operator=(const value_type& rhs) { 
