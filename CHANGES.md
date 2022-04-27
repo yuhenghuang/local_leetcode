@@ -7,6 +7,8 @@ The document details the changes between this version, local leetcode 0.9.3.3 an
 
 - minor fixes on internal functions/classes and documents
 
+- update (simplify) the implementation of internal `property` to meet c++17 standard
+
 
 ------------------------------------------------------------------------------
 2022-03-23

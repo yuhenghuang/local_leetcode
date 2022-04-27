@@ -134,7 +134,11 @@ class param_range {
     size_t i; // start index, inclusive
     size_t j; // end index, exclusive
 
+#if __cplusplus < 201703L
     property<size_t, self, &param_range::length> l; // size_t, length property;
+#else
+    property<&param_range::length> l;
+#endif
 
     param_range(size_t _i = 0, size_t _j = 0): 
       i(_i), j(_j), l(this) 
