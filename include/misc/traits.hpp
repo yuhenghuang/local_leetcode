@@ -111,6 +111,8 @@ struct fn_ptr_traits<Tp (*)(Args...)>
   typedef std::tuple<input_parameter<
     typename remove_reference_to_pointer<Args>::type
   > ...> args_tuple_param_type;
+
+  typedef std::false_type has_const;
 };
 
 
@@ -126,12 +128,39 @@ struct fn_ptr_traits<Tp (Cp::*)(Args...)>
   typedef std::tuple<input_parameter<
     typename remove_reference_to_pointer<Args>::type
   > ...> args_tuple_param_type;
+
+  typedef std::false_type has_const;
+  // remove const and noexcept
+  typedef Tp (Cp::*fn_ptr_type)(Args...) ;
 };
 
 
 // specialization for const member function
 template <typename Tp, class Cp, typename... Args>
-struct fn_ptr_traits<Tp (Cp::*)(Args...) const> : public fn_ptr_traits<Tp (Cp::*)(Args...)> { };
+struct fn_ptr_traits<Tp (Cp::*)(Args...) const> : public fn_ptr_traits<Tp (Cp::*)(Args...)> {
+  typedef std::true_type has_const;
+};
+
+template <typename Tp, class Cp, typename... Args>
+struct fn_ptr_traits<Tp (Cp::*)(Args...) const noexcept> : public fn_ptr_traits<Tp (Cp::*)(Args...)> {
+  typedef std::true_type has_const;
+};
+
+template <typename Tp, class Cp, typename... Args>
+struct fn_ptr_traits<Tp (Cp::*)(Args...) noexcept> : public fn_ptr_traits<Tp (Cp::*)(Args...)> {
+  typedef std::false_type has_const;
+};
+
+
+// specialization for nullptr_t
+template <>
+struct fn_ptr_traits<nullptr_t>: 
+  public std::integral_constant<size_t, 0UL> {
+  //
+
+  typedef nullptr_t fn_ptr_type;
+  typedef std::false_type has_const;
+};
 
 
 template <bool... > struct bool_dummies { };

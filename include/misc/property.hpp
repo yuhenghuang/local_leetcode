@@ -102,6 +102,7 @@ template <typename Tp, typename Cp, Tp (Cp::*Getter)() const, std::remove_const_
  * @brief property. read-only if 2nd template parameter is omitted.
  *   The implementation under c++17 simplifies the template parameters.
  *   The validation of template parameters (member function pointers) is done by static_assert inside class
+ *   ~~todo: include cases of noexcept signature~~ done!...
  * 
  * @tparam Getter member function pointer to getter
  * @tparam Setter member function pointer to setter. null pointer by default
@@ -118,10 +119,13 @@ class property {
     typedef value_type& reference;
     typedef const value_type& const_reference;
 
-    // assert Getter's type
+    // assert Getter's type (zero parameter and has const signature)
     static_assert(
-      std::is_same<decltype(Getter), return_type (class_type::*)() const>::value,
-      "Getter must be the type of return_type (class_type::*)() const"
+      std::conjunction<
+        typename fn_ptr_traits<decltype(Getter)>::has_const,
+        std::bool_constant<fn_ptr_traits<decltype(Getter)>::value == 0>
+      >::value,
+      "Getter must be the type of return_type (class_type::*)() const [noexcpt]"
     );
 
     // assert Getter's return type
@@ -136,10 +140,14 @@ class property {
     // assert Setter's type
     static_assert(
       std::disjunction<
-        std::is_same<decltype(Setter), nullptr_t>, 
-        std::is_same<decltype(Setter), reference (class_type::*)(const_reference)>
-      >::value, 
-      "Setter must be compatible with Getter (either null or reference (class_type::*)(const reference))"
+        std::is_same<typename fn_ptr_traits<decltype(Setter)>::fn_ptr_type, nullptr_t>, 
+        std::conjunction<
+          std::is_same<typename fn_ptr_traits<decltype(Setter)>::fn_ptr_type, reference (class_type::*)(const_reference)>,
+          std::is_same<typename fn_ptr_traits<decltype(Setter)>::has_const, std::false_type>
+        >
+      >::value
+      , 
+      "Setter must be compatible with Getter (either null or reference (class_type::*)(const_reference)) and has no const signature"
     );
 
   private:
@@ -153,6 +161,9 @@ class property {
     property(const self&) = delete;
 
     // need more test cases to perfect the logic in assignment
+    // cannot distinguish if this method called in the copy assignment of class_type
+    // or simply a.property = b.property where a and b are instances of class_type
+    // in the previous case, the Setter might be called redundantly ('cause the original member should already be copied directly)
     self& operator=(const self& rhs) {
       // not read-only (compile time)
       if constexpr (nullptr != Setter) {

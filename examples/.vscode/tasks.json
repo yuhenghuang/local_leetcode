@@ -60,7 +60,7 @@
         "$gcc"
       ],
       "group": "build",
-      "detail": "compiler: /bin/clang++-12"
+      "detail": "compiler: /bin/clang++"
     },
   ]
 }
