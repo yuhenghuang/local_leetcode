@@ -317,18 +317,13 @@ universal_printer<NaryTreeNode*>::operator()(NaryTreeNode* root) {
   if (root) {
     std::cout << root->val;
 
-    if (!root->children.empty())
-      std::cout << ", null";
+    q.push(nullptr);
 
-    for (NaryTreeNode*& child : root->children) {
-      std::cout << ", " << child->val;
-
+    n += root->children.size();
+    for (NaryTreeNode*& child : root->children)
       q.push(child);
-      n += child->children.size();
-    }
 
-    if (n > 0)
-      std::cout << ", null";
+    q.push(nullptr);
   }
 
   while (!q.empty()) {
@@ -340,16 +335,19 @@ universal_printer<NaryTreeNode*>::operator()(NaryTreeNode* root) {
       root = q.front();
       q.pop();
 
-      --m;
+      if (root) {
+        --m;
 
-      for (NaryTreeNode*& child : root->children) {
-        std::cout << ", " << child->val;
+        std::cout << ", " << root->val;
 
-        q.push(child);
-        n += child->children.size();
+        n += root->children.size();
+
+        for (NaryTreeNode*& child : root->children)
+          q.push(child);
+
+        q.push(nullptr);
       }
-
-      if (m > 0 || n > 0)
+      else if (m > 0 || n > 0)
         std::cout << ", null";
     }
   }

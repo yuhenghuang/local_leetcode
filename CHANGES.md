@@ -1,4 +1,13 @@
 ------------------------------------------------------------------------------
+2022-05-01 (as of, updating)
+
+The document details the changes between this version, local leetcode 0.9.3.4 and previous version, local leetcode 0.9.3.3.
+
+- fix the logic mistake in printing `NaryTreeNode` which may result in redundant `null`
+
+
+
+------------------------------------------------------------------------------
 2022-04-28
 
 The document details the changes between this version, local leetcode 0.9.3.3 and previous version, local leetcode 0.9.3.2.

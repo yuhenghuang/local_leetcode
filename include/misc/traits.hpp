@@ -174,11 +174,15 @@ struct fn_traits<Ret (Args...)> :
 
 
 // function / class member function traits
-template <typename FnPtr> struct fn_ptr_traits;
+template <
+  class FnPtr, 
+  bool IsMemFnPtr = std::is_member_function_pointer<FnPtr>::value
+> 
+struct fn_ptr_traits;
 
 // member function pointer
 template <class Fn, class Cp>
-struct fn_ptr_traits<Fn Cp::*>:
+struct fn_ptr_traits<Fn Cp::*, true>:
   public fn_traits<typename remove_fn_cv_noexcept<Fn>::type>
 {
   typedef typename remove_fn_cv_noexcept<Fn>::type Cp::* fn_ptr_raw_type;
@@ -187,9 +191,20 @@ struct fn_ptr_traits<Fn Cp::*>:
   typedef fn_has_const<Fn> has_const;
 };
 
+// member object pointer
+template <class Tp, class Cp>
+struct fn_ptr_traits<Tp Cp::*, false>
+{
+  typedef Tp Cp::* fn_ptr_raw_type;
+
+  typedef Tp& return_type;
+  typedef Cp class_type;
+  typedef std::false_type has_const;
+};
+
 // function pointer
 template <class Fn>
-struct fn_ptr_traits<Fn*>:
+struct fn_ptr_traits<Fn*, false>:
   public fn_traits<typename remove_fn_cv_noexcept<Fn>::type>
 {
   typedef typename remove_fn_cv_noexcept<Fn>::type* fn_ptr_raw_type;
@@ -283,9 +298,9 @@ template <typename Tp> struct has_prev;
 // is array (c or c++11) or std::vector of pointers
 template <typename Tp>
 struct is_array_of_pointers: 
-  public all<
-    is_array<Tp>::value,
-    std::is_pointer<typename remove_extent<Tp>::type>::value
+  public std::conjunction<
+    is_array<Tp>,
+    std::is_pointer<typename remove_extent<Tp>::type>
   >
 { };
 
