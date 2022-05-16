@@ -122,7 +122,7 @@ Sea::Sea(Sea&& rhs) noexcept :
 { }
 
 Sea& 
-Sea::operator==(Sea&& rhs) noexcept {
+Sea::operator=(Sea&& rhs) noexcept {
   prefix = std::move(rhs.prefix);
 
   return *this;

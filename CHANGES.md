@@ -1,9 +1,11 @@
 ------------------------------------------------------------------------------
-2022-05-01 (as of, updating)
+2022-05-16 (as of, updating)
 
 The document details the changes between this version, local leetcode 0.9.3.4 and previous version, local leetcode 0.9.3.3.
 
 - fix the logic mistake in printing `NaryTreeNode` which may result in redundant `null`
+
+- fix the wrong operator implementation in type `Sea`, i.e. `operator==` to `operator=`
 
 
 
@@ -16,7 +18,7 @@ The document details the changes between this version, local leetcode 0.9.3.3 an
 
 - minor fixes on internal functions/classes and documents
 
-- update (simplify) the implementation of internal `property` to meet c++17 standard
+- update (simplify) the implementation of internal `property` to meet c++17 standards
 
 - update the internal function pointer traits
 
