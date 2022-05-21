@@ -84,13 +84,13 @@ struct Iterator::Data {
   Data(const int* _iter, const int* _end): iter(_iter), end(_end) { }
 };
 
-Iterator::Iterator(const std::vector<int>& nums) {
-  data = new Data(nums.data(), nums.data() + nums.size());
-}
+Iterator::Iterator(const std::vector<int>& nums):
+  data(new Data(nums.data(), nums.data() + nums.size()))
+{ }
 
-Iterator::Iterator(const Iterator& iter) {
-  data = new Data(iter.data->iter, iter.data->end);
-}
+Iterator::Iterator(const Iterator& iter):
+  data(new Data(iter.data->iter, iter.data->end))
+{ }
 
 Iterator::~Iterator() { delete data; }
 

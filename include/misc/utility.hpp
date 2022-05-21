@@ -103,6 +103,12 @@ ListNode* create_cycle(ListNode* head, int pos);
  */
 void intersect_linked_lists(ListNode* headA, ListNode* headB, int skipA, int skipB);
 
+// The rand7() API is already defined for you.
+// int rand7();
+// @return a random integer in the range 1 to 7
+int rand7();
+
+
 namespace internal {
 
 /**

@@ -184,7 +184,7 @@ For more details of the supported data types of the feature, see the following s
 
 This function, `ll::destroy(void *)` from [*include/io/destroyer.hpp*](https://github.com/yuhenghuang/local_leetcode/blob/main/include/io/destroyer.hpp),  is used to release memories of the interim objects in the heap.
 
-The original purpose of the function is to manage the memory perfectly by the user him/herself, while it came to light that the task was impossible during the development and tests. The function remains specifically for someone who wants to manage the memory by oneself without setting `ASAN_OPTIONS=detect_leaks=0`.
+The original purpose of the function is to manage the memory perfectly by the user him/herself, while it came to light that the task was impossible during the development and test. The function remains specifically for someone who wants to manage the memory by oneself without setting `ASAN_OPTIONS=detect_leaks=0`.
 
 Supported objects (`Node`)
 
@@ -222,6 +222,12 @@ Supported objects (`Node`)
 
 - in line with the instructions from the official site
 - same goes for the compilation flags, including *asan* flags
+- same goes for the choice of STL library `libc++`
+
+
+4. Can test cases be skipped to avoid some annoying unconveniences, like long outputs blocking the terminal when debugging?
+
+- Test cases can be commented out by `# ` in the beginning of a line to skip it.
 
 
 For other more specific questions, the wiki will be available in the future.

@@ -205,4 +205,10 @@ intersect_linked_lists(ListNode* headA, ListNode* headB, int skipA, int skipB) {
 }
 
 
+int 
+rand7() {
+  return (rand() % 7) + 1;
+}
+
+
 } // end of ll

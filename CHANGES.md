@@ -1,12 +1,13 @@
 ------------------------------------------------------------------------------
-2022-05-16 (as of, updating)
+2022-05-21 (as of, updating)
 
 The document details the changes between this version, local leetcode 0.9.3.4 and previous version, local leetcode 0.9.3.3.
+
+- add `int rand7()` function to generate random integer over $[1, 7]$, and expose it from namespace
 
 - fix the logic mistake in printing `NaryTreeNode` which may result in redundant `null`
 
 - fix the wrong operator implementation in type `Sea`, i.e. `operator==` to `operator=`
-
 
 
 ------------------------------------------------------------------------------

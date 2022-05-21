@@ -47,7 +47,9 @@
 #undef _LL_FRIEND_PROPERTY
 
 
-// expose data structure
+// expose funtion / data structure
+using ll::rand7;
+
 using ll::TreeNode;
 using ll::ListNode;
 
