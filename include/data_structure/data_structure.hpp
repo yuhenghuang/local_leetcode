@@ -55,13 +55,13 @@ struct ListNode;
 // linked list node with an extra edge to random node
 struct RandomListNode;
 
-// circular linked list node whoes tail connected to its head
+// circular linked list node whose tail is connected to its head
 struct CircularListNode;
 
 // doubly linked list with an extra edge to the head of next level
 struct TernaryListNode;
 
-// nested integer, be either an integer or a list of integer
+// nested integer, be either an integer or a list of integers
 class NestedInteger;
 
 // java-like iterator over vector<int> with methods of next() and hasNext()
@@ -296,7 +296,6 @@ class Sea {
     Sea(const std::vector<std::vector<int>>& ships);
 
     // move construction and assignment
-    
     Sea(Sea&&) noexcept;
     Sea& operator=(Sea&&) noexcept;
 

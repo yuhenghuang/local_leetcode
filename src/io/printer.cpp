@@ -402,7 +402,7 @@ universal_printer<RandomListNode*>::operator()(RandomListNode* head) {
   m[nullptr] = -1;
 
   RandomListNode* p = head;
-  for (int i = 0; p != nullptr; p = p->next, ++i) 
+  for (int i = 0; p != nullptr; p = p->next, (void) ++i) 
     m[p] = i;
 
   std::cout << '[';
@@ -460,13 +460,15 @@ universal_printer<NestedInteger>::operator()(const NestedInteger& ni) {
   else {
     std::cout << '[';
 
-    auto iter = ni.getList().begin();
-    (*this)(*iter++);
+    if ( !(ni.getList().empty()) ) {
+      auto iter = ni.getList().begin();
+      (*this)(*iter++);
 
-    auto end = ni.getList().end();
-    for (; iter != end; ++iter) {
-      std::cout << ", ";
-      (*this)(*iter);
+      auto end = ni.getList().end();
+      for (; iter != end; ++iter) {
+        std::cout << ", ";
+        (*this)(*iter);
+      }
     }
 
     std::cout << ']';

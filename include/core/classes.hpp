@@ -156,7 +156,7 @@ class universal_class {
     // at least as long as the object they created
     args_tuple_param_type inputs;
 
-    // pointer to class used in all methods
+    // pointer to the instance used by all methods
     std::unique_ptr<class_type> ptr;
 
     class_factory_ptr factory;
@@ -240,7 +240,7 @@ class universal_class {
 
 namespace internal {
 
-// parse next Tp in s after j, then update j to the end to Tp
+// parse next Tp in s after j, then update j to the end of Tp
 template <typename Tp>
 inline 
 Tp 
@@ -265,6 +265,7 @@ void generate_params(Tuple& params,
   // ...
   // j is a global index of s, indicating end of previous argument
   size_t j = 0;
+  
   (
     (std::get<Is>(params) = 
       parse_next_arg<
@@ -355,7 +356,7 @@ method_class<MemFn>::exec_call(class_type* ptr,
 
 // in case nontrivial default ctor of Solution is unavoidable 
 #ifndef _LL_NONTRIVIAL_SOLUTION_CTOR
-  // differentiate solution type(single function) and design type by verifying 
+  // distinguish solution type(single function) and design type by verifying 
   // whether class_type is trivially default constructible
   if constexpr (!std::is_trivially_default_constructible<class_type>::value)
     std::cout << "null";
@@ -386,7 +387,7 @@ method_class<MemFn>::exec_call(class_type* ptr,
 
 // in case nontrivial default ctor of Solution is unavoidable 
 #ifndef _LL_NONTRIVIAL_SOLUTION_CTOR
-  // differentiate solution type(single function) and design type by verifying 
+  // distinguish solution type(single function) and design type by verifying 
   // whether class_type is trivially default constructible
   if constexpr (!std::is_trivially_default_constructible<class_type>::value && (rank<return_type>::value == 2UL)) {
     std::cout << "\n ";

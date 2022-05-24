@@ -35,10 +35,12 @@ By default, the program will load the input in *Inputs/{source_name.txt}* in cur
 ├── 01_solution.cpp
 ├── 02_design.cpp
 ├── 03_overload.cpp
+├── 04_void_return.cpp
 └── Inputs
     ├── 01_solution.txt
     ├── 02_design.txt
-    └── 03_overload.txt
+    ├── 03_overload.txt
+    └── 04_void_return.txt
 ```
 
 if none of the settings are changed (just as *examples*).
@@ -107,7 +109,7 @@ After testing several approaches on windows, *msys2* is recommended because it's
 As stated in the requirements, from *msys2*, the following libraries/tools are needed
 
 - clang-toolchain (comes with clang targeted to gnu)
-  - libraries should come with the toolchain
+  - required libraries should come with the toolchain by default
 - ninja (or other preferred build tool)
 
 After other steps like setting `PATH`, one can now start building
@@ -129,7 +131,7 @@ Use `mklink` to put *.dll* file in the directory of executables or set `PATH` to
 
 #### Node types
 
-To enable correct `Node` for specific problem from various types, one needs to define macro before the header file.
+To enable correct `Node` type for specific problem from various types, one needs to define macro before the header file.
 
 For example, to use a tree node with four children as typename `Node`, 
 
@@ -155,7 +157,7 @@ EXECS(Solution::method, return_type, (arg_types, ...));
 
 The library internally distinguishes *solution* and *design* types of problems by checking whether the class is trivially constructable.
 
-This logic fails if `Solution` has an explicit constructor. 
+This logic fails if `Solution` has explicit constructors or non-primitive members. 
 
 To enforce the behavior of the library under the condition where explicit constructor in `Solution` in unavoidable, simply define
 
@@ -215,19 +217,19 @@ Supported objects (`Node`)
 
 - reduce compilation time of solutions drastically
   - the exposure of STL symbols contributes (e.g. `std::vector<int>`)
-- reduce the size of compiled binary
+- reduce the size of compiled binary of the solution
 
 
-3. Why is the compiler specified as `Clang` and not other compilers?
+3. Why is the compiler specified as `clang` and not other compilers?
 
 - in line with the instructions from the official site
-- same goes for the compilation flags, including *asan* flags
+- same goes for c++ standards and the compilation flags, including *asan* flags
 - same goes for the choice of STL library `libc++`
 
 
 4. Can test cases be skipped to avoid some annoying unconveniences, like long outputs blocking the terminal when debugging?
 
-- Test cases can be commented out by `# ` in the beginning of a line to skip it.
+- Test cases can be commented out by `# ` at the beginning of a line to skip it.
 
 
 For other more specific questions, the wiki will be available in the future.
@@ -235,4 +237,4 @@ For other more specific questions, the wiki will be available in the future.
 
 ## License
 
-The library is released under the GNU GLP-3.0 license.
+The library is released under the GNU GPL-3.0 ![license logo](https://www.gnu.org/graphics/gplv3-with-text-84x42.png) license.
