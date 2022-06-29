@@ -371,7 +371,7 @@ universal_parser<ListNode*>::operator()(const std::string& s) const {
   universal_parser<int> parser;
 
   std::string val;
-  for (size_t i = 0; i < n; ++i, ++node) {
+  for (size_t i = 0; i < n; ++i, (void) ++node) {
     param.get_next(val);
     node->val = parser(val);
 
@@ -432,7 +432,7 @@ universal_parser<CircularListNode*>::operator()(const std::string& s) const {
   universal_parser<int> parser;
 
   std::string val;
-  for (size_t i = 0; i < n; ++i, ++node) {
+  for (size_t i = 0; i < n; ++i, (void) ++node) {
     param.get_next(val);
     node->val = parser(val);
 

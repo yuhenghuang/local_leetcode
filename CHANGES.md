@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
-2022-05-22 (as of, updating)
+2022-06-14 (as of, updating)
 
 The document details the changes between this version, local leetcode 0.9.3.4 and previous version, local leetcode 0.9.3.3.
 
@@ -11,7 +11,7 @@ The document details the changes between this version, local leetcode 0.9.3.4 an
 
 - fix the logic mistake of not being able to print empty `NestedInteger`
 
-- minor fixes/updates on *README.md*
+- minor fixes/updates on *README.md* and other files
 
 
 ------------------------------------------------------------------------------
