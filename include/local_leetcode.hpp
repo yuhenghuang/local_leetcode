@@ -35,6 +35,7 @@
 #include <set>
 #include <climits>
 #include <numeric>
+#include <stack>
 
 #include "data_structure/data_structure.hpp"
 #include "misc/utility.hpp"

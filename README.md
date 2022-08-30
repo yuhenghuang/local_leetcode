@@ -47,7 +47,7 @@ if none of the settings are changed (just as *examples*).
 
 <sup>* the input directory and extension can be customized by defining specific MACROs. `_LL_INPUT_DIR` and `_LL_INPUT_EXT` are used for the directory and extension of input files respectively</sup>
 
-Each line of the input file contains all the arguments to execute the {method} or {class} **once**. The seperator of arguments are `','`, and spaces are skipped also.
+Each line of the input file contains all the arguments to execute the {method} or {class} **once**. The seperator of arguments are `,`, and spaces are skipped also.
 
 Following is the example of `int, vector<int>, TreeNode*` as input
 ```txt
@@ -227,9 +227,11 @@ Supported objects (`Node`)
 - same goes for the choice of STL library `libc++`
 
 
-4. Can test cases be skipped to avoid some annoying unconveniences, like long outputs blocking the terminal when debugging?
+4. Can test cases be skipped to avoid some annoying inconveniences, like long outputs blocking the terminal when debugging?
 
 - Test cases can be commented out by `# ` at the beginning of a line to skip it.
+
+- The maximum printed output of `vector<>` type can also be adjusted macros, e.g. use `#define _LL_PRINT_ARRAY_MAX_LENGTH 100` to limit the output elements of an array to be non-greater than 100.
 
 
 For other more specific questions, the wiki will be available in the future.
