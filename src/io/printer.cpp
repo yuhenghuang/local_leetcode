@@ -23,6 +23,7 @@
 
 
 #include "io/printer.hpp"
+// #include <iomanip>
 
 namespace ll {
 namespace internal {
@@ -112,6 +113,13 @@ universal_printer<std::string>::operator()(const std::string& res) {
 void 
 universal_printer<bool>::operator()(const bool res) {
   std::cout << std::boolalpha << res;
+}
+
+
+void 
+universal_printer<double>::operator()(const double res) {
+  // std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1) << res;
+  printf("%.5f", res);
 }
 
 

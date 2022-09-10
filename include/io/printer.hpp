@@ -75,6 +75,9 @@ template <> struct universal_printer<std::string> { void operator()(const std::s
 // boolean
 template <> struct universal_printer<bool> { void operator()(const bool); };
 
+// double
+template <> struct universal_printer<double> { void operator()(const double); };
+
 // tree
 template <> struct universal_printer<TreeNode*> { void operator()(TreeNode*); };
 template <> struct universal_printer<TernaryTreeNode*> { void operator()(TernaryTreeNode*); };

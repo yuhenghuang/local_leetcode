@@ -7,6 +7,8 @@ The document details the changes between this version, local leetcode 0.9.3.4 an
 
 - add `include <stack>` in header file for convenience
 
+- add explicit print format for `double` to be in line with official output.
+
 - fix the logic mistake in printing `NaryTreeNode` which may result in redundant `null`
 
 - fix the wrong operator implementation in type `Sea`, i.e. `operator==` to `operator=`

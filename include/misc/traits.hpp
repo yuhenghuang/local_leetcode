@@ -36,7 +36,9 @@
 
 namespace ll {
 
-// scalar
+
+// detect the rank of the type
+// scalar by default
 template <typename>
 struct rank: public std::integral_constant<size_t, 0UL> { };
 
