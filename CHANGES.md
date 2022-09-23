@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
-2022-08-24 (as of, updating)
+2022-09-23
 
 The document details the changes between this version, local leetcode 0.9.3.4 and previous version, local leetcode 0.9.3.3.
 
@@ -14,6 +14,8 @@ The document details the changes between this version, local leetcode 0.9.3.4 an
 - fix the wrong operator implementation in type `Sea`, i.e. `operator==` to `operator=`
 
 - fix the logic mistake of not being able to print empty `NestedInteger`
+
+- fix the logic of failing to parse `'\''` inside a doubly quoted string
 
 - minor fixes/updates on *README.md* and other files
 

@@ -262,7 +262,9 @@ find_param_range<Tp, true, true>::operator()(const std::string& s, size_t i) {
   // move from left quote
   size_t j = i + 1;
 
-  while (j < s.size() && s[j] != '\'' && s[j] != '"')
+  // until next quote found
+  // TODO: handle escaped quotes
+  while (j < s.size() && s[j] != s[i])
     ++j;
     
   return {i, j + 1};
