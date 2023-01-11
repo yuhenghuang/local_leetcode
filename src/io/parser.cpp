@@ -1,7 +1,7 @@
 /**
  * @file parser.cpp
  * 
- * @copyright Copyright (c) 2021 - 2022, Yuheng Huang <kongqiota@gmail.com>
+ * @copyright Copyright (c) 2021 - 2023, Yuheng Huang <kongqiota@gmail.com>
  * 
  * parser.cpp is part of library local leetcode, 
  * a c++ library that parses inputs and execute solutions of programming problems
@@ -89,6 +89,17 @@ BinaryTreeNode* parse_binary_tree_node(const std::string& s) {
 
 // ---------------------
 // implementations below
+
+// boolean
+bool 
+universal_parser<bool>::operator()(const std::string& s) const {
+  if (s == "true")
+    return true;
+  else if (s == "false")
+    return false;
+  else
+    throw std::runtime_error("invalid bool input!");
+}
 
 // characters
 // inline

@@ -1,7 +1,7 @@
 /**
  * @file parser.hpp
  * 
- * @copyright Copyright (c) 2021 - 2022, Yuheng Huang <kongqiota@gmail.com>
+ * @copyright Copyright (c) 2021 - 2023, Yuheng Huang <kongqiota@gmail.com>
  * 
  * parser.hpp is part of library local leetcode, 
  * a c++ library that parses inputs and execute solutions of programming problems
@@ -49,6 +49,8 @@ struct universal_parser {
 
 template <> struct universal_parser<char> { char operator()(const std::string&) const; };
 template <> struct universal_parser<std::string> { std::string operator()(const std::string&) const; };
+
+template <> struct universal_parser<bool> { bool operator()(const std::string&) const; };
 
 template <> struct universal_parser<int> { int operator()(const std::string&) const; };
 template <> struct universal_parser<long> { long operator()(const std::string&) const; };

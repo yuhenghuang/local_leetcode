@@ -1,4 +1,11 @@
 ------------------------------------------------------------------------------
+2023-01-11 (as of)
+
+The document details the changes between this version, local leetcode 0.9.3.5 and previous version, local leetcode 0.9.3.4.
+
+- add parser for type `bool`
+
+------------------------------------------------------------------------------
 2022-09-23
 
 The document details the changes between this version, local leetcode 0.9.3.4 and previous version, local leetcode 0.9.3.3.
@@ -94,7 +101,7 @@ The document details the changes between this version, local leetcode 0.9.1.1 an
 The document details the changes between this version, local leetcode 0.9.1.0 and previous version, local leetcode 0.9.0.0.
 
 - fixed wrong information in *README.md*
-  - header-only version is forthcoming, not avaible now.
+  - header-only version is forthcoming, not available now.
 
 - fixed level of section titles to increase readability in *README.md*
 
