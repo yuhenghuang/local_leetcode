@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16.3)
 
-project(local_leetcode VERSION 0.9.3.4)
+project(local_leetcode VERSION 0.9.4.0)
 
 # check clang and its version
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "^(Apple)?Clang$")
@@ -44,6 +44,10 @@ endif()
 option(BUILD_EXAMPLES "need to build examples?" OFF)
 
 if(BUILD_EXAMPLES)
+  include(CTest)
+
+  # print output
+  list(APPEND CMAKE_CTEST_ARGUMENTS "--verbose")
 
   set(EXAMPLE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/examples)
 
@@ -57,6 +61,8 @@ if(BUILD_EXAMPLES)
     add_executable(${example_file} ${example_source_file})
 
     target_link_libraries(${example_file} local_leetcode)
+
+    add_test(NAME ${example_file} COMMAND ${example_file} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/examples)
   endforeach()
 
   # copy example source and input files

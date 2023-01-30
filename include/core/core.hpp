@@ -1,10 +1,10 @@
 /**
  * @file core.hpp
  * 
- * @copyright Copyright (c) 2021 - 2022, Yuheng Huang <kongqiota@gmail.com>
+ * @copyright Copyright (c) 2021 - 2023, Yuheng Huang <kongqiota@gmail.com>
  * 
  * core.hpp is part of library local leetcode, 
- * a c++ library that parses inputs and execute solutions of programming problems
+ * a c++ library that parses inputs and executes solutions of programming problems
  * 
  * Local leetcode is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -121,6 +121,7 @@ execs(const std::string& path,
 
 namespace internal {
 
+/*
 template <typename Cp, typename... Args>
 Cp* 
 class_factory(Args&&... args) 
@@ -128,6 +129,7 @@ noexcept(std::is_nothrow_constructible<Cp, Args&&...>::value)
 {
   return new Cp(std::forward<Args>(args) ...);
 }
+*/
 
 } // end of internal
 
@@ -148,17 +150,13 @@ execx(const std::string& path,
   static_assert(!std::is_void<class_type>::value, "all methods must be from the same class!");
   static_assert(std::is_constructible<class_type, Args...>::value, "no specified ctor exists!");
 
-  typedef class_type* (*factory_type)(Args&& ...);
-
-  factory_type factory = internal::class_factory<class_type, Args ...>;
-
   // parse method names by regex iterator
   std::regex re("&(\\w+)::(\\w+)");
   std::sregex_iterator iter(method_names.begin(), method_names.end(), re);
 
   std::string class_name = iter->str(1);
 
-  universal_class<factory_type> cls(factory);
+  universal_class<class_type, Args...> cls;
 
   // add methods and names to wrapper (feature since c++17)
   ( cls.add_method(mem_fns, iter++->str(2)), ... );
@@ -223,11 +221,7 @@ execs(const std::string& path,
   // assert default ctor
   static_assert(std::is_default_constructible<class_type>::value, "no default ctor");
 
-  typedef class_type* (*factory_type)();
-
-  factory_type factory = internal::class_factory<class_type>;
-
-  universal_class<factory_type> cls(factory);
+  universal_class<class_type> cls;
 
   std::string method_name = 
     method_name_raw.substr(method_name_raw.find_last_of(':') + 1);

@@ -4,7 +4,7 @@
  * @copyright Copyright (c) 2021 - 2023, Yuheng Huang <kongqiota@gmail.com>
  * 
  * parser.hpp is part of library local leetcode, 
- * a c++ library that parses inputs and execute solutions of programming problems
+ * a c++ library that parses inputs and executes solutions of programming problems
  * 
  * Local leetcode is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

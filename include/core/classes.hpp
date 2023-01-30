@@ -1,10 +1,10 @@
 /**
  * @file classes.hpp
  * 
- * @copyright Copyright (c) 2021 - 2022, Yuheng Huang <kongqiota@gmail.com>
+ * @copyright Copyright (c) 2021 - 2023, Yuheng Huang <kongqiota@gmail.com>
  * 
  * classes.hpp is part of library local leetcode, 
- * a c++ library that parses inputs and execute solutions of programming problems
+ * a c++ library that parses inputs and executes solutions of programming problems
  * 
  * Local leetcode is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -136,21 +136,21 @@ class method_class : public method_class_base<typename fn_ptr_traits<MemFn>::cla
  * @brief wraps everything (factory and method) up
  * allows user to call method function by string representation of method name and arguments
  * 
- * @tparam Factory type of function pointer to class factory
+ * @tparam Cp class type
+ * @tparam Args arguments of specific ctor
  * 
  */
-template <class Factory>
+template <class Cp, class... Args>
 class universal_class {
   private:
-    typedef universal_class<Factory> self;
-    typedef Factory class_factory_ptr;
-    typedef typename std::remove_pointer<
-      typename fn_ptr_traits<Factory>::return_type
-    >::type class_type;
+    typedef universal_class<Cp, Args...> self;
+    typedef Cp class_type;
 
-    typedef typename fn_ptr_traits<Factory>::args_tuple_param_type args_tuple_param_type;
+    typedef std::tuple<input_parameter<
+      typename remove_reference_to_pointer<Args>::type
+    > ...> args_tuple_param_type;
 
-    constexpr static size_t args_size = fn_ptr_traits<Factory>::value;
+    constexpr static size_t args_size = sizeof...(Args);
 
     // in many cases the arguments of ctor have to live
     // at least as long as the object they created
@@ -159,13 +159,12 @@ class universal_class {
     // pointer to the instance used by all methods
     std::unique_ptr<class_type> ptr;
 
-    class_factory_ptr factory;
+    // class_factory_ptr factory;
     std::vector< std::unique_ptr<method_class_base<class_type>> > methods;
 
     template <size_t... Is>
     void factory_helper(std::index_sequence<Is...>) {
-      // assigning raw pointer to unique_ptr is not allowed...
-      ptr = std::unique_ptr<class_type>( (*factory)(std::get<Is>(inputs) ...) ); 
+      ptr = std::make_unique<class_type>(std::get<Is>(inputs) ...);
     }
 
     /*
@@ -185,9 +184,7 @@ class universal_class {
     */
 
   public:
-    universal_class() = delete;
-
-    explicit universal_class(Factory _factory): factory(_factory) { }
+    explicit universal_class() { }
 
     // the reason that copy/move construction/assignment are deleted is
     // UNNECESSARY
@@ -295,11 +292,9 @@ method_class<MemFn>::operator()(class_type* ptr, const std::string& s) const {
 
 // universal_class
 
-template <class Factory>
+template <class Cp, class... Args>
 auto
-universal_class<Factory>::initialize_or_replace(const std::string& s) -> self& {
-  // release_object();
-
+universal_class<Cp, Args...>::initialize_or_replace(const std::string& s) -> self& {
   internal::generate_params(inputs, s, std::make_index_sequence<args_size>{});
   
   factory_helper(std::make_index_sequence<args_size>{});
@@ -307,20 +302,20 @@ universal_class<Factory>::initialize_or_replace(const std::string& s) -> self& {
   return *this;
 }
 
-template <class Factory>
+template <class Cp, class... Args>
 template <typename MemFn, typename>
 inline
 auto
-universal_class<Factory>::add_method(MemFn fn, const std::string& s) -> self& {
+universal_class<Cp, Args...>::add_method(MemFn fn, const std::string& s) -> self& {
   methods.push_back( 
     std::make_unique<method_class<MemFn>>(fn, s) 
   );
   return *this;
 }
 
-template <class Factory>
+template <class Cp, class... Args>
 double 
-universal_class<Factory>::operator()(const std::string& name, const std::string& args) {
+universal_class<Cp, Args...>::operator()(const std::string& name, const std::string& args) {
   method_class_base<class_type>* method = nullptr;
   for (auto& m : methods)
     if (m->get_name() == name) {

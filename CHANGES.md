@@ -1,9 +1,18 @@
+
 ------------------------------------------------------------------------------
-2023-01-11 (as of)
+2023-01-30 (as of)
 
-The document details the changes between this version, local leetcode 0.9.3.5 and previous version, local leetcode 0.9.3.4.
+The document details the changes between this version, local leetcode 0.9.4.0 and previous version, local leetcode 0.9.3.4.
 
-- add parser for type `bool`
+- add parser for type `bool` (unquoted true or false)
+
+- add examples to test if they are built. please execute `make test` to invoke tests
+
+- optimize internal classes/functions
+  - use `std::make_unique` to replace redundant `internal::class_factory` for class ctor
+  - use `std::unique_ptr<value_type[]>` to manage memory for input parameters
+  <sup>* note: remaining explicit `new` and `delete` operators exist in *src/*. migrating them to smart pointers will only affect the performance negatively while provide no visible benefit. thus, there will be NO plan to optimize them (e.g. *src/io/parser.cpp*) unless fatal bugs are found.</sup>
+
 
 ------------------------------------------------------------------------------
 2022-09-23

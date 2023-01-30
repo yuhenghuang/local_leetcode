@@ -1,10 +1,10 @@
 /**
  * @file input_parameter.hpp
  * 
- * @copyright Copyright (c) 2021 - 2022, Yuheng Huang <kongqiota@gmail.com>
+ * @copyright Copyright (c) 2021 - 2023, Yuheng Huang <kongqiota@gmail.com>
  * 
  * input_parameter.hpp is part of library local leetcode, 
- * a c++ library that parses inputs and execute solutions of programming problems
+ * a c++ library that parses inputs and executes solutions of programming problems
  * 
  * Local leetcode is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,14 +83,12 @@ class input_parameter<Tp*, false> {
   private:
     typedef input_parameter<Tp*, false> self;
 
-    type par;
-
-    void release_memory() { delete[] par; }
+    std::unique_ptr<Tp[]> ptr;
 
   public:
     input_parameter() = default;
 
-    operator Tp*() { return par; }
+    operator Tp*() { return ptr.get(); }
 
     template <
       typename Up,
@@ -98,14 +96,12 @@ class input_parameter<Tp*, false> {
     >
     self& operator=(Up&& _par)
     noexcept(std::is_nothrow_assignable<type&, Up&&>::value) {
-      release_memory();
-
-      par = std::forward<Up>(_par);
+      // make_unique doesn't work for array type
+      // use explicit ctor
+      ptr = std::unique_ptr<Tp[]>(std::forward<Up>(_par));
 
       return *this;
     }
-
-    ~input_parameter() { release_memory(); }
 };
 
 
@@ -118,13 +114,11 @@ class input_parameter<Tp, true> {
 
   private:
     typedef input_parameter<Tp, true> self;
+    typedef typename std::remove_pointer<pointer>::type value_type;
 
     type par;
 
-    void release_memory() {
-      for (auto& ptr : par)
-        delete[] ptr;
-    }
+    std::vector<std::unique_ptr<value_type[]>> ptrs;
 
   public:
     input_parameter() = default;
@@ -137,14 +131,21 @@ class input_parameter<Tp, true> {
     >
     self& operator=(Up&& _par) 
     noexcept(std::is_nothrow_assignable<type&, Up&&>::value) {
-      release_memory();
-
       par = std::forward<Up>(_par);
+
+      // resize performs better than clear
+      ptrs.resize(par.size());
+
+      transform(
+        par.begin(), par.end(),
+        ptrs.begin(),
+        // make_unique doesn't work for array type
+        // use explicit ctor
+        [] (const pointer& ptr) { return std::unique_ptr<value_type[]>(ptr); }
+      );
 
       return *this;
     }
-
-    ~input_parameter() { release_memory(); }
 };
 
 
