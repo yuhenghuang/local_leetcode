@@ -1,12 +1,18 @@
 
 ------------------------------------------------------------------------------
-2023-01-30 (as of)
+2023-02-11 (as of)
 
 The document details the changes between this version, local leetcode 0.9.4.0 and previous version, local leetcode 0.9.3.4.
 
 - add parser for type `bool` (unquoted true or false)
 
 - add examples to test if they are built. please execute `make test` to invoke tests
+
+- support raw array (e.g. `Node* []`) of fixed size or variable size (need to pass length as second parameter) in functor `universal_destroyer<Tp[]>`.
+
+- update debugger configurations in *examples/*
+  - migrate outdated `lldb-mi` to `lldb-vscode`
+  - fix the outdated parameter `stopAtEntry` to `stopOnEntry`
 
 - optimize internal classes/functions
   - use `std::make_unique` to replace redundant `internal::class_factory` for class ctor

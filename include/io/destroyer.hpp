@@ -1,10 +1,10 @@
 /**
  * @file destroyer.hpp
  * 
- * @copyright Copyright (c) 2021 - 2022, Yuheng Huang <kongqiota@gmail.com>
+ * @copyright Copyright (c) 2021 - 2023, Yuheng Huang <kongqiota@gmail.com>
  * 
  * destroyer.hpp is part of library local leetcode, 
- * a c++ library that parses inputs and execute solutions of programming problems
+ * a c++ library that parses inputs and executes solutions of programming problems
  * 
  * Local leetcode is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,11 +52,33 @@ struct universal_destroyer<Tp*> { void operator()(Tp* ptr) { destroy(ptr); } };
 // vector of pointers
 template <typename Tp>
 struct universal_destroyer<std::vector<Tp>> {
-  void operator()(std::vector<Tp>& vec) {
+  void operator()(const std::vector<Tp>& vec) {
     universal_destroyer<Tp> destroyer;
 
     for (Tp& e : vec)
       destroyer(e);
+  }
+};
+
+
+// array
+template <typename Tp>
+struct universal_destroyer<Tp[]> {
+  // fixed size
+  template <size_t N>
+  void operator()(Tp (&arr)[N]) {
+    universal_destroyer<Tp> destroyer;
+
+    for (Tp& e : arr)
+      destroyer(e);
+  }
+
+  // variable size
+  void operator()(Tp (&arr)[], size_t n) {
+    universal_destroyer<Tp> destroyer;
+
+    for (size_t i = 0; i < n; ++i)
+      destroyer(arr[i]);
   }
 };
 

@@ -10,7 +10,7 @@
       "request": "launch",
       "program": "${fileDirname}/ExeFiles/${fileBasenameNoExtension}",
       "args": [],
-      "stopAtEntry": false,
+      "stopOnEntry": false,
       "cwd": "${workspaceFolder}",
       "env": {
         // "ASAN_OPTIONS" : "detect_leaks=0:verbosity=1:log_threads=1"
@@ -18,6 +18,23 @@
       },
       "preLaunchTask": "C/C++: clang++ build active file for debug"
     },
+    {
+      // see https://github.com/llvm/llvm-project/tree/main/lldb/tools/lldb-vscode
+      // to configure the extension
+      "name": "lldb-vscode - Build and debug active file",
+      "type": "lldb-vscode",
+      "request": "launch",
+      "program": "${fileDirname}/ExeFiles/${fileBasenameNoExtension}",
+      "args": [],
+      "stopOnEntry": false,
+      "cwd": "${workspaceFolder}",
+      "env": [
+        // "ASAN_OPTIONS=detect_leaks=0:verbosity=1:log_threads=1"
+        "ASAN_OPTIONS=detect_leaks=0"
+      ],
+      "preLaunchTask": "C/C++: clang++ build active file for debug"
+    }
+    /* lldb-mi is out-dated, move to lldb-vscode
     {
       "name": "lldb-mi - Build and debug active file",
       "type": "cppdbg",
@@ -46,5 +63,6 @@
       "preLaunchTask": "C/C++: clang++ build active file for debug",
       "miDebuggerPath": "/usr/bin/lldb-mi"
     }
+    */
   ]
 }
