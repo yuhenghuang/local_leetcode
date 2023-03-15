@@ -41,27 +41,31 @@ namespace ll {
  */
 template <typename Tp> void destroy(Tp* root);
 
-// non-pointer
+// non-pointer, do nothing
 template<typename Tp>
 struct universal_destroyer { void operator()(Tp&) { } };
 
-// pointer
+// raw pointer
 template <typename Tp>
 struct universal_destroyer<Tp*> { void operator()(Tp* ptr) { destroy(ptr); } };
 
 // vector of pointers
 template <typename Tp>
 struct universal_destroyer<std::vector<Tp>> {
-  void operator()(const std::vector<Tp>& vec) {
+
+  // the purpose of this functor is to reduce rank
+  // thus it allows Tp and Up to be different
+  template <typename Up>
+  void operator()(const std::vector<Up>& vec) {
     universal_destroyer<Tp> destroyer;
 
-    for (Tp& e : vec)
+    for (const Up& e : vec)
       destroyer(e);
   }
 };
 
 
-// array
+// array, or pointer obtained by array new
 template <typename Tp>
 struct universal_destroyer<Tp[]> {
   // fixed size
@@ -79,6 +83,11 @@ struct universal_destroyer<Tp[]> {
 
     for (size_t i = 0; i < n; ++i)
       destroyer(arr[i]);
+  }
+
+  // delete memory allocated by array new
+  void operator()(Tp* ptr) {
+    delete[] ptr;
   }
 };
 

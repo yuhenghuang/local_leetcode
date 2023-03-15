@@ -28,6 +28,7 @@
 
 #include "../misc/traits.hpp"
 #include "../io/parser.hpp"
+#include "../io/destroyer.hpp"
 
 namespace ll {
 
@@ -106,19 +107,28 @@ class input_parameter<Tp*, false> {
 
 
 // vector of pointers
+// n-dim vector supported now
 template <typename Tp>
 class input_parameter<Tp, true> {
   public:
-    typedef typename std::remove_reference<Tp>::type::value_type pointer;
-    typedef std::vector<pointer> type;
+    typedef typename std::remove_cv<
+      typename std::remove_reference<Tp>::type
+    >::type type;
 
   private:
     typedef input_parameter<Tp, true> self;
-    typedef typename std::remove_pointer<pointer>::type value_type;
+    typedef typename is_vector_of_pointers<Tp>::value_type value_type;
 
     type par;
 
-    std::vector<std::unique_ptr<value_type[]>> ptrs;
+    void clear() {
+      // passing type n-dim vector of Tp[] and argument of Tp* to destroyer
+      // indicates that Tp* was created by array new, thus should be destroyed by array delete.
+      // why rank<type>::value needs to subtract 1?
+      // because rank of pointer is 1 (not 0 because it's actually created by array new) by definition
+      // see include/misc/traits.hpp:47
+      universal_destroyer<typename n_rank_vector<value_type[], rank<type>::value - 1>::type>()(par);
+    }
 
   public:
     input_parameter() = default;
@@ -131,21 +141,14 @@ class input_parameter<Tp, true> {
     >
     self& operator=(Up&& _par) 
     noexcept(std::is_nothrow_assignable<type&, Up&&>::value) {
+      clear();
+
       par = std::forward<Up>(_par);
-
-      // resize performs better than clear
-      ptrs.resize(par.size());
-
-      transform(
-        par.begin(), par.end(),
-        ptrs.begin(),
-        // make_unique doesn't work for array type
-        // use explicit ctor
-        [] (const pointer& ptr) { return std::unique_ptr<value_type[]>(ptr); }
-      );
 
       return *this;
     }
+
+    ~input_parameter() { clear(); }
 };
 
 

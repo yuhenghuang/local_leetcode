@@ -1,6 +1,17 @@
 
 ------------------------------------------------------------------------------
-2023-02-11 (as of)
+2023-03-15 (as of)
+
+The document details the changes between this version, local leetcode 0.9.4.1 and previous version, local leetcode 0.9.4.0.
+
+- further optimized parser and input parameters to support n-dim (n >= 2) vector of pointers
+  - changed internal implementations (use `universal_destroyer<...>` to manage memories instead of `unique_ptr<>`) to enable this feature
+  - several type traits added for the implementation of the feature
+  - new example added as test for the feature
+
+
+------------------------------------------------------------------------------
+2023-02-11
 
 The document details the changes between this version, local leetcode 0.9.4.0 and previous version, local leetcode 0.9.3.4.
 
@@ -11,8 +22,8 @@ The document details the changes between this version, local leetcode 0.9.4.0 an
 - support raw array (e.g. `Node* []`) of fixed size or variable size (need to pass length as second parameter) in functor `universal_destroyer<Tp[]>`.
 
 - update debugger configurations in *examples/*
-  - migrate outdated `lldb-mi` to `lldb-vscode`
-  - fix the outdated parameter `stopAtEntry` to `stopOnEntry`
+  - migrate from outdated `lldb-mi` to `lldb-vscode`
+  - fix the deprecated parameter `stopAtEntry` to `stopOnEntry`
 
 - optimize internal classes/functions
   - use `std::make_unique` to replace redundant `internal::class_factory` for class ctor

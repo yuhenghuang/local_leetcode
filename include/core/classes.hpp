@@ -137,7 +137,7 @@ class method_class : public method_class_base<typename fn_ptr_traits<MemFn>::cla
  * allows user to call method function by string representation of method name and arguments
  * 
  * @tparam Cp class type
- * @tparam Args arguments of specific ctor
+ * @tparam Args argument types of a specific ctor
  * 
  */
 template <class Cp, class... Args>

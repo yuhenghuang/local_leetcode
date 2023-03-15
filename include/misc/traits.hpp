@@ -1,7 +1,7 @@
 /**
  * @file traits.hpp
  * 
- * @copyright Copyright (c) 2021 - 2022, Yuheng Huang <kongqiota@gmail.com>
+ * @copyright Copyright (c) 2021 - 2023, Yuheng Huang <kongqiota@gmail.com>
  * 
  * traits.hpp is part of library local leetcode, 
  * a c++ library that parses inputs and execute solutions of programming problems
@@ -307,6 +307,22 @@ struct is_array_of_pointers:
 { };
 
 
+// Tp + Rank -> n-rank vector of Tp
+template <typename Tp, size_t Rank>
+struct n_rank_vector;
+
+// end condition
+template <typename Tp>
+struct n_rank_vector<Tp, 0> {
+  typedef Tp type;
+};
+
+template <typename Tp, size_t Rank>
+struct n_rank_vector {
+  typedef std::vector<typename n_rank_vector<Tp, Rank - 1>::type> type;
+};
+
+
 namespace internal {
 
 // is operator<< defined?
@@ -325,11 +341,19 @@ struct is_printable_impl: public do_is_printable_impl {
 
 
 // is vector of pointers
+
+// end conditions
 template <typename Tp>
 struct is_vector_of_pointers_impl: public std::false_type { };
 
 template <typename Tp>
-struct is_vector_of_pointers_impl<std::vector<Tp*>>: public std::true_type { };
+struct is_vector_of_pointers_impl<std::vector<Tp*>>: public std::true_type {
+  typedef Tp value_type;
+};
+
+// recurse
+template <typename Tp>
+struct is_vector_of_pointers_impl<std::vector<std::vector<Tp>>>: public is_vector_of_pointers<std::vector<Tp>> { };
 
 
 // detect graph category
