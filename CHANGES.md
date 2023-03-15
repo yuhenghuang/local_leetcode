@@ -4,7 +4,9 @@
 
 The document details the changes between this version, local leetcode 0.9.4.1 and previous version, local leetcode 0.9.4.0.
 
-- further optimized parser and input parameters to support n-dim (n >= 2) vector of pointers
+- further optimized internal `input_parameter` to support n-dim (n >= 2) vector of pointers
+  - 0-dim (single raw pointer) case is absorbed by in the same specialization now
+  - non-pointer case is absorbed by the same specialization now. technically speaking these is no partial specialization now, template class only. 
   - changed internal implementations (use `universal_destroyer<...>` to manage memories instead of `unique_ptr<>`) to enable this feature
   - several type traits added for the implementation of the feature
   - new example added as test for the feature

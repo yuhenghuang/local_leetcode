@@ -32,12 +32,8 @@
 
 namespace ll {
 
-/**
- * @brief wrap up input parameters, works as smart pointer
- * 
- * @tparam Tp input type (possibly with const, reference, pointer)
- * @tparam IsVecofPtrs is input type a vector of pointers (default is declarad in misc/traits.hpp)
- */
+
+/*
 template <
   typename Tp, 
   bool IsVecofPtrs// = is_vector_of_pointers<Tp>::value
@@ -75,7 +71,7 @@ class input_parameter<Tp, false> {
 };
 
 
-// pointer
+// pointer (absorbed by implementation for vector of pointers)
 template <typename Tp>
 class input_parameter<Tp*, false> {
   public:
@@ -104,30 +100,29 @@ class input_parameter<Tp*, false> {
       return *this;
     }
 };
+*/
 
 
-// vector of pointers
-// n-dim vector supported now
 template <typename Tp>
-class input_parameter<Tp, true> {
+class input_parameter {
   public:
     typedef typename std::remove_cv<
       typename std::remove_reference<Tp>::type
     >::type type;
 
   private:
-    typedef input_parameter<Tp, true> self;
+    typedef input_parameter<Tp> self;
+
+    // elem_type[] for pointer element
+    // elem_type for non-pointer element
     typedef typename is_vector_of_pointers<Tp>::value_type value_type;
 
     type par;
 
     void clear() {
-      // passing type n-dim vector of Tp[] and argument of Tp* to destroyer
-      // indicates that Tp* was created by array new, thus should be destroyed by array delete.
-      // why rank<type>::value needs to subtract 1?
-      // because rank of pointer is 1 (not 0 because it's actually created by array new) by definition
-      // see include/misc/traits.hpp:47
-      universal_destroyer<typename n_rank_vector<value_type[], rank<type>::value - 1>::type>()(par);
+      // emtpy destroyer functor is called for non-pointer types
+      // though it shouldn't affect performance at -O2 where the emtpy functor is inlined
+      universal_destroyer<typename n_rank_vector<value_type, rank<type>::value - rank<value_type>::value>::type>()(par);
     }
 
   public:

@@ -43,7 +43,7 @@ template <typename Tp> void destroy(Tp* root);
 
 // non-pointer, do nothing
 template<typename Tp>
-struct universal_destroyer { void operator()(Tp&) { } };
+struct universal_destroyer { void operator()(const Tp&) { } };
 
 // raw pointer
 template <typename Tp>

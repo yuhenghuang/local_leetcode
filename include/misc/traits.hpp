@@ -38,13 +38,17 @@ namespace ll {
 
 
 // detect the rank of the type
-// scalar by default
+// scalar is 0 by default
 template <typename>
 struct rank: public std::integral_constant<size_t, 0UL> { };
 
 // pointer, e.g. tree
 template <typename Tp>
 struct rank<Tp*>: public std::integral_constant<size_t, 1UL> { };
+
+// array
+template <typename Tp>
+struct rank<Tp[]>: public std::integral_constant<size_t, 1UL> { };
 
 // vector
 template <typename Tp>
@@ -74,7 +78,7 @@ template <> struct is_character<char>: public std::true_type { };
 template <typename Tp> struct is_printable;
 
 /**
- * @brief if Tp is std::vector<Tp*> after removing const and reference
+ * @brief if Tp is vectors of Tp* (including Tp* itself) after removing const and reference
  * 
  * @tparam Tp 
  */
@@ -90,10 +94,14 @@ template <typename Tp> struct remove_reference_to_pointer<Tp* &&> { typedef Tp* 
 
 template <typename... Args> struct args_pack { };
 
-
+/**
+ * @brief wrap up input parameters, works as smart pointer
+ * 
+ * @tparam Tp input type (possibly with const, reference, pointer)
+ */
 template <
-  typename Tp, 
-  bool IsVecofPtrs = is_vector_of_pointers<Tp>::value
+  typename Tp 
+  // bool IsVecofPtrs = is_vector_of_pointers<Tp>::value
 >
 class input_parameter;
 
@@ -309,7 +317,9 @@ struct is_array_of_pointers:
 
 // Tp + Rank -> n-rank vector of Tp
 template <typename Tp, size_t Rank>
-struct n_rank_vector;
+struct n_rank_vector {
+  typedef std::vector<typename n_rank_vector<Tp, Rank - 1>::type> type;
+};
 
 // end condition
 template <typename Tp>
@@ -317,10 +327,6 @@ struct n_rank_vector<Tp, 0> {
   typedef Tp type;
 };
 
-template <typename Tp, size_t Rank>
-struct n_rank_vector {
-  typedef std::vector<typename n_rank_vector<Tp, Rank - 1>::type> type;
-};
 
 
 namespace internal {
@@ -341,19 +347,20 @@ struct is_printable_impl: public do_is_printable_impl {
 
 
 // is vector of pointers
+template <typename Tp>
+struct is_vector_of_pointers_impl: public std::false_type {
+  typedef Tp value_type;
+};
 
 // end conditions
 template <typename Tp>
-struct is_vector_of_pointers_impl: public std::false_type { };
-
-template <typename Tp>
-struct is_vector_of_pointers_impl<std::vector<Tp*>>: public std::true_type {
-  typedef Tp value_type;
+struct is_vector_of_pointers_impl<Tp*>: public std::true_type {
+  typedef Tp value_type[];
 };
 
 // recurse
 template <typename Tp>
-struct is_vector_of_pointers_impl<std::vector<std::vector<Tp>>>: public is_vector_of_pointers<std::vector<Tp>> { };
+struct is_vector_of_pointers_impl<std::vector<Tp>>: public is_vector_of_pointers<Tp> { };
 
 
 // detect graph category
