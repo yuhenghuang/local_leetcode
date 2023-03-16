@@ -29,17 +29,17 @@ namespace internal {
 
 // parse binary tree node and ternary tree node with one null edge
 template <typename BinaryTreeNode>
-BinaryTreeNode* parse_binary_tree_node(const std::string& s) {
-  param_iterator<int> param(s);
+BinaryTreeNode* parse_binary_tree_node(std::string_view sv) {
+  param_iterator<int> param(sv);
 
   if (!param.has_next())
     return nullptr;
 
   // size of tree
-  size_t n = std::count(s.begin(), s.end(), ',') + 1UL;
+  size_t n = std::count(sv.begin(), sv.end(), ',') + 1UL;
 
   // size of null node
-  size_t u = std::count(s.begin(), s.end(), 'u');
+  size_t u = std::count(sv.begin(), sv.end(), 'u');
 
   // only array new non-null nodes
   // prepare for further plan of memory management (smart pointer)
@@ -56,7 +56,7 @@ BinaryTreeNode* parse_binary_tree_node(const std::string& s) {
 
   universal_parser<int> parser;
 
-  std::string val;
+  std::string_view val;
   for (iter = &nodes[0]; param.get_next(val); ++iter) {
     if (val != "null") {
       node->val = parser(val);
@@ -92,10 +92,10 @@ BinaryTreeNode* parse_binary_tree_node(const std::string& s) {
 
 // boolean
 bool 
-universal_parser<bool>::operator()(const std::string& s) const {
-  if (s == "true")
+universal_parser<bool>::operator()(std::string_view sv) const {
+  if (sv == "true")
     return true;
-  else if (s == "false")
+  else if (sv == "false")
     return false;
   else
     throw std::runtime_error("invalid bool input!");
@@ -104,68 +104,55 @@ universal_parser<bool>::operator()(const std::string& s) const {
 // characters
 // inline
 char
-universal_parser<char>::operator()(const std::string& s) const {
+universal_parser<char>::operator()(std::string_view sv) const {
   // skip '\'' at index 0
-  return s[1];
+  return sv[1];
 }
 
 // inline
 std::string
-universal_parser<std::string>::operator()(const std::string& s) const {
+universal_parser<std::string>::operator()(std::string_view sv) const {
   // skip '"'s on the sides
-  return s.substr(1, s.size() - 2);
+  // use explicit ctor
+  return std::string(sv.substr(1, sv.size() - 2));
 }
 
 
-// numerics
-// inline
-int
-universal_parser<int>::operator()(const std::string& s) const { return std::stoi(s); }
-
-// inline
-long
-universal_parser<long>::operator()(const std::string& s) const { return std::stol(s); }
-
-// inline
-long long
-universal_parser<long long>::operator()(const std::string& s) const { return std::stoll(s); }
-
 // inline
 double
-universal_parser<double>::operator()(const std::string& s) const { return std::stod(s); }
-
-uint32_t
-universal_parser<uint32_t>::operator()(const std::string& s) const { 
-  uint32_t res = 0;
-
-  for (char c : s) {
-    res <<= 1;
-    res |= c - '0';
-  }
-
-  return res;
+universal_parser<double>::operator()(std::string_view sv) const {
+  // not implemented in clang/gcc yet, only implemented in MSVC
+  // double res;
+  // internal::from_chars_throws(sv.data(), sv.data() + sv.size(), res);
+  return std::stod(std::string(sv)); 
 }
 
 
 // tree / graph
 // inline
 TreeNode*
-universal_parser<TreeNode*>::operator()(const std::string& s) const {
-  return internal::parse_binary_tree_node<TreeNode>(s);
+universal_parser<TreeNode*>::operator()(std::string_view sv) const {
+  return internal::parse_binary_tree_node<TreeNode>(sv);
 }
 
 
 // inline
 TernaryTreeNode*
-universal_parser<TernaryTreeNode*>::operator()(const std::string& s) const {
-  return internal::parse_binary_tree_node<TernaryTreeNode>(s);
+universal_parser<TernaryTreeNode*>::operator()(std::string_view sv) const {
+  return internal::parse_binary_tree_node<TernaryTreeNode>(sv);
 }
 
 
 RandomTreeNode*
-universal_parser<RandomTreeNode*>::operator()(const std::string& s) const {
+universal_parser<RandomTreeNode*>::operator()(std::string_view sv) const {
   // null random pointer to -1
-  std::string line = regex_replace(s, std::regex("null"), "-1");
+  std::string line;
+  
+  regex_replace(
+    std::back_inserter(line),
+    sv.begin(), sv.end(),
+    std::regex("null"), "-1"
+  );
 
   // use nested integer to save parsed vector
   NestedInteger ni = universal_parser<NestedInteger>()(line);
@@ -233,15 +220,21 @@ universal_parser<RandomTreeNode*>::operator()(const std::string& s) const {
 
 
 QuadNode*
-universal_parser<QuadNode*>::operator()(const std::string& s) const {
+universal_parser<QuadNode*>::operator()(std::string_view sv) const {
   // size of null node
-  size_t u = std::count(s.begin(), s.end(), 'u');
+  size_t u = std::count(sv.begin(), sv.end(), 'u');
   
   // such that it can be parsed to 2D vector
-  std::string line = regex_replace(s, std::regex("null"), "[-1,-1]");
+  std::string line;
+  
+  regex_replace(
+    std::back_inserter(line),
+    sv.begin(), sv.end(),
+    std::regex("null"), "[-1,-1]"
+  );
 
   // must be declared after the following specialization of 2D vector
-  auto mat = universal_parser<std::vector<std::vector<int>>>()(line);
+  auto&& mat = universal_parser<std::vector<std::vector<int>>>()(line);
 
   size_t n = mat.size();
 
@@ -253,7 +246,7 @@ universal_parser<QuadNode*>::operator()(const std::string& s) const {
 
   QuadNode* node = root;
   QuadNode** iter = &nodes[0];
-  for (std::vector<int>& p : mat) {
+  for (const std::vector<int>& p : mat) {
     if (p[0] >= 0) {
       node->isLeaf = p[0];
       node->val = p[1];
@@ -291,17 +284,17 @@ universal_parser<QuadNode*>::operator()(const std::string& s) const {
 
 
 NaryTreeNode*
-universal_parser<NaryTreeNode*>::operator()(const std::string& s) const {
-  param_iterator<int> param(s);
+universal_parser<NaryTreeNode*>::operator()(std::string_view sv) const {
+  param_iterator<int> param(sv);
 
   if (!param.has_next())
     return nullptr;
 
   // size of tree
-  size_t n = std::count(s.begin(), s.end(), ',') + 1UL;
+  size_t n = std::count(sv.begin(), sv.end(), ',') + 1UL;
 
   // size of null node
-  size_t u = std::count(s.begin(), s.end(), 'u');
+  size_t u = std::count(sv.begin(), sv.end(), 'u');
 
   // only array new non-null nodes
   // prepare for further plan of memory management (smart pointer)
@@ -319,7 +312,7 @@ universal_parser<NaryTreeNode*>::operator()(const std::string& s) const {
 
   universal_parser<int> parser;
 
-  std::string val;
+  std::string_view val;
   for (iter = &nodes[0]; param.get_next(val); ++iter) {
     if (val != "null") {
       node->val = parser(val);
@@ -343,8 +336,8 @@ universal_parser<NaryTreeNode*>::operator()(const std::string& s) const {
 
 
 NaryGraphNode*
-universal_parser<NaryGraphNode*>::operator()(const std::string& s) const {
-  auto mat = universal_parser<std::vector<std::vector<int>>>()(s);
+universal_parser<NaryGraphNode*>::operator()(std::string_view sv) const {
+  auto&& mat = universal_parser<std::vector<std::vector<int>>>()(sv);
 
   size_t n = mat.size();
   
@@ -364,14 +357,14 @@ universal_parser<NaryGraphNode*>::operator()(const std::string& s) const {
 
 // list
 ListNode*
-universal_parser<ListNode*>::operator()(const std::string& s) const {
-  param_iterator<int> param(s);
+universal_parser<ListNode*>::operator()(std::string_view sv) const {
+  param_iterator<int> param(sv);
 
   if (!param.has_next())
     return nullptr;
 
   // size of linked list
-  size_t n = std::count(s.begin(), s.end(), ',') + 1UL;
+  size_t n = std::count(sv.begin(), sv.end(), ',') + 1UL;
 
   // array new to save memory
   // prepare for further plan of memory management (smart pointer)
@@ -381,7 +374,7 @@ universal_parser<ListNode*>::operator()(const std::string& s) const {
 
   universal_parser<int> parser;
 
-  std::string val;
+  std::string_view val;
   for (size_t i = 0; i < n; ++i, (void) ++node) {
     param.get_next(val);
     node->val = parser(val);
@@ -395,11 +388,17 @@ universal_parser<ListNode*>::operator()(const std::string& s) const {
 
 
 RandomListNode*
-universal_parser<RandomListNode*>::operator()(const std::string& s) const {
+universal_parser<RandomListNode*>::operator()(std::string_view sv) const {
   // null random pointer to -1
-  std::string line = regex_replace(s, std::regex("null"), "-1");
+  std::string line;
+  
+  regex_replace(
+    std::back_inserter(line),
+    sv.begin(), sv.end(),
+    std::regex("null"), "-1"
+  );
 
-  auto mat = universal_parser<std::vector<std::vector<int>>>()(line);
+  auto&& mat = universal_parser<std::vector<std::vector<int>>>()(line);
 
   size_t n = mat.size();
 
@@ -425,14 +424,14 @@ universal_parser<RandomListNode*>::operator()(const std::string& s) const {
 
 
 CircularListNode*
-universal_parser<CircularListNode*>::operator()(const std::string& s) const {
-  param_iterator<int> param(s);
+universal_parser<CircularListNode*>::operator()(std::string_view sv) const {
+  param_iterator<int> param(sv);
 
   if (!param.has_next())
     return nullptr;
 
   // size of linked list
-  size_t n = std::count(s.begin(), s.end(), ',') + 1UL;
+  size_t n = std::count(sv.begin(), sv.end(), ',') + 1UL;
 
   // array new to save memory
   // prepare for further plan of memory management (smart pointer)
@@ -442,7 +441,7 @@ universal_parser<CircularListNode*>::operator()(const std::string& s) const {
 
   universal_parser<int> parser;
 
-  std::string val;
+  std::string_view val;
   for (size_t i = 0; i < n; ++i, (void) ++node) {
     param.get_next(val);
     node->val = parser(val);
@@ -459,17 +458,17 @@ universal_parser<CircularListNode*>::operator()(const std::string& s) const {
 
 
 TernaryListNode*
-universal_parser<TernaryListNode*>::operator()(const std::string& s) const {
-  param_iterator<int> param(s);
+universal_parser<TernaryListNode*>::operator()(std::string_view sv) const {
+  param_iterator<int> param(sv);
 
   if (!param.has_next())
     return nullptr;
 
   // size of tree
-  size_t n = std::count(s.begin(), s.end(), ',') + 1UL;
+  size_t n = std::count(sv.begin(), sv.end(), ',') + 1UL;
 
   // size of null node
-  size_t u = std::count(s.begin(), s.end(), 'u');
+  size_t u = std::count(sv.begin(), sv.end(), 'u');
 
   // only array new non-null nodes
   // prepare for further plan of memory management (smart pointer)
@@ -478,7 +477,7 @@ universal_parser<TernaryListNode*>::operator()(const std::string& s) const {
 
   TernaryListNode* nodes[n];
   
-  std::string val;
+  std::string_view val;
   universal_parser<int> parser;
 
   // index in head;
@@ -521,15 +520,15 @@ universal_parser<TernaryListNode*>::operator()(const std::string& s) const {
 
 // nested integer
 NestedInteger
-universal_parser<NestedInteger>::operator()(const std::string& s) const {
+universal_parser<NestedInteger>::operator()(std::string_view sv) const {
   // integer
-  if (s.front() != '[')
-    return NestedInteger(universal_parser<int>()(s));
+  if (sv.front() != '[')
+    return NestedInteger(universal_parser<int>()(sv));
 
   NestedInteger ni;
 
-  param_iterator<NestedInteger> param(s);
-  std::string val;
+  param_iterator<NestedInteger> param(sv);
+  std::string_view val;
   while (param.get_next(val))
     ni.add((*this)(val));
 
@@ -539,8 +538,8 @@ universal_parser<NestedInteger>::operator()(const std::string& s) const {
 
 // sea
 Sea
-universal_parser<Sea>::operator()(const std::string& s) const {
-  auto ships = universal_parser<std::vector<std::vector<int>>>()(s);
+universal_parser<Sea>::operator()(std::string_view sv) const {
+  auto&& ships = universal_parser<std::vector<std::vector<int>>>()(sv);
 
   return Sea(ships);
 }

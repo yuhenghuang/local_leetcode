@@ -57,16 +57,19 @@ Following is the example of `int, vector<int>, TreeNode*` as input
 
 For design type, the format of each line is `["{method_names}", ...], [[{arguments}], ...]`.
 
+- Build the library
+
+check section [build](#build)
 
 - Compilation flags
 
 ```bash
-clang++ -std=c++17 -stdlib=libc++ {source_name.cpp} -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -O2 -Ipath/to/local_leetcode/include -Lpath/to/local_leetcode/lib -o {output_executable} -llocal_leetcode
+clang++ -std=c++17 {source_name.cpp} -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -O2 -Ipath/to/local_leetcode/include -Lpath/to/local_leetcode/lib -o {output_executable} -llocal_leetcode
 ```
 
-<sup>* To use `libc++` on non-Mac OS,`-stdlib=libc++` is added </sup>
+<sup>* ~~To use `libc++` on non-Mac OS,`-stdlib=libc++` is added~~ add flag `-stdlib=c++` and link `-lc++abi` if `-DUSE_LIBC++=on` was enabled for building the library</sup>
 
-<sup>* To suppress memory leak error, try setting environment variable `ASAN_OPTIONS=detect_leaks=0`</sup>
+<sup>* to suppress memory leak error, try setting environment variable `ASAN_OPTIONS=detect_leaks=0`</sup>
 
 
 Check the directory [*examples*](https://github.com/yuhenghuang/local_leetcode/tree/main/examples) for more granular cases.
@@ -76,10 +79,13 @@ Check the directory [*examples*](https://github.com/yuhenghuang/local_leetcode/t
 * Requirements
   * cmake (3.16.3 or higher)
   * clang++ (11 or higher)
-  * libc++-dev libc++abi-dev (to use std provided by llvm)
+  * libcxx or libc++ (no longer enforce the use of libc++)
+  * ~~libc++-dev libc++abi-dev (to use std provided by llvm)~~
   * build tool. `make` on linux or `ninja` (or alike) on windows
 * Other details
   * to build examples, please add `-DBUILD_EXAMPLES=on` in cmake arguments
+  * to use libc++ on non-macOS machines, please add `-DUSE_LIBC++=on` in cmake arguments
+    * if libc++ is enabled, don't forget to add flag `-stdlib=c++` and link `-lc++abi` when compiling executables against the built library
   * it's not recommended to install the library in the system paths because of its limited usage
   * please use soft link (`ln -s` on unix or `mklink` on windows) to achieve similar goals.
 
@@ -92,6 +98,9 @@ The requirements should be almost (already) be met on most unix-like OS. Thus fo
 mkdir build
 cd build
 
+# add
+# -DBUILD_EXAMPLES=on -DUSE_LIBC++=on
+# to enable building examples and use libc++ on non-macos machine
 cmake .. -DCMAKE_CXX_COMPILER=clang++  -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 ```
@@ -117,6 +126,10 @@ After other steps like setting `PATH`, one can now start building
 ```bat
 mkdir build
 cd build
+
+:: add
+:: -DBUILD_EXAMPLES=on -DUSE_LIBC++=on
+:: to enable building examples and use libc++ on non-macos machine
 
 :: please specify correct make target (e.g. Ninja)
 cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE -DCMAKE_BUILD_TYPE=Release

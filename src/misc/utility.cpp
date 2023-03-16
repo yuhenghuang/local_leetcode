@@ -1,7 +1,7 @@
 /**
  * @file utility.cpp
  * 
- * @copyright Copyright (c) 2021 - 2022, Yuheng Huang <kongqiota@gmail.com>
+ * @copyright Copyright (c) 2021 - 2023, Yuheng Huang <kongqiota@gmail.com>
  * 
  * utility.cpp is part of library local leetcode, 
  * a c++ library that parses inputs and execute solutions of programming problems
@@ -33,10 +33,9 @@ namespace internal {
  * @param s string
  * @param i index
  */
-inline 
 void 
-skip_delimiters(const std::string& s, size_t& i) {
-  while (i < s.size() && ((s[i] == ' ') || (s[i] == ',')))
+skip_delimiters(std::string_view sv, size_t& i) {
+  while (i < sv.size() && ((sv[i] == ' ') || (sv[i] == ',')))
     ++i;
 }
 
@@ -87,11 +86,11 @@ intersect_linked_lists_impl(ListNode* headA, ListNode* headB, int skipA, int ski
 
 // nested integer
 param_range
-find_param_range<NestedInteger>::operator()(const std::string& s, size_t i) {
-  internal::skip_delimiters(s, i);
+find_param_range<NestedInteger>::operator()(std::string_view sv, size_t i) {
+  internal::skip_delimiters(sv, i);
 
   // whether it's a list or an integer
-  return s[i] == '[' ? find_param_range<std::vector<int>>()(s, i) : find_param_range<int>()(s, i);
+  return sv[i] == '[' ? find_param_range<std::vector<int>>()(sv, i) : find_param_range<int>()(sv, i);
 };
 
 

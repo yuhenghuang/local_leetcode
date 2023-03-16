@@ -1,7 +1,7 @@
 /**
  * @file utility.hpp
  * 
- * @copyright Copyright (c) 2021 - 2022, Yuheng Huang <kongqiota@gmail.com>
+ * @copyright Copyright (c) 2021 - 2023, Yuheng Huang <kongqiota@gmail.com>
  * 
  * utility.hpp is part of library local leetcode, 
  * a c++ library that parses inputs and execute solutions of programming problems
@@ -28,9 +28,8 @@
 #include "property.hpp"
 #include "traits.hpp"
 #include <assert.h>
+#include <string_view>
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wundefined-inline"
 
 namespace ll {
 
@@ -117,9 +116,8 @@ namespace internal {
  * @param s string
  * @param i index
  */
-inline
 void 
-skip_delimiters(const std::string& s, size_t& i);
+skip_delimiters(std::string_view sv, size_t& i);
 
 } // end of internal
 
@@ -166,29 +164,29 @@ struct find_param_range {
   /**
    * @brief find the range of current parameter [i, j) on string s
    * 
-   * @param s string to be parsed
+   * @param sv string view to be parsed
    * @param i index, the end of previous parameter. 0 if no such parameter
    * @return param_range 
    */
-  param_range operator()(const std::string& s, size_t i); 
+  param_range operator()(std::string_view sv, size_t i); 
 };
 
 
 // scalar
 template <typename Tp>
-struct find_param_range<Tp, true, false> { param_range operator()(const std::string& s, size_t i); };
+struct find_param_range<Tp, true, false> { param_range operator()(std::string_view sv, size_t i); };
 
 // character
 template <typename Tp>
-struct find_param_range<Tp, true, true> { param_range operator()(const std::string& s, size_t i); };
+struct find_param_range<Tp, true, true> { param_range operator()(std::string_view sv, size_t i); };
 
 // array
 template <typename Tp>
-struct find_param_range<Tp, false, false> { param_range operator()(const std::string& s, size_t i); };
+struct find_param_range<Tp, false, false> { param_range operator()(std::string_view sv, size_t i); };
 
 // nested integer
 template <>
-struct find_param_range<NestedInteger> { param_range operator()(const std::string& s, size_t i); };
+struct find_param_range<NestedInteger> { param_range operator()(std::string_view sv, size_t i); };
 
 
 /**
@@ -199,12 +197,12 @@ struct find_param_range<NestedInteger> { param_range operator()(const std::strin
 template <typename Tp>
 class param_iterator {
   private:
-    const std::string& s;
+    std::string_view sv;
     param_range range;
     find_param_range<Tp> finder;
 
   public:
-    param_iterator(const std::string& _s, size_t i = 1UL);
+    param_iterator(std::string_view _sv, size_t i = 1UL);
 
     /**
      * @brief verify if there exists next value
@@ -216,11 +214,11 @@ class param_iterator {
     /**
      * @brief get the next string representation of value
      * 
-     * @param val string, output
+     * @param val string_view, output
      * 
      * @return bool, whether any value left
      */
-    bool get_next(std::string& val);
+    bool get_next(std::string_view& val);
 };
 
 
@@ -242,11 +240,11 @@ path_to_input_file(const char* dir,
 // scalar
 template <typename Tp>
 param_range
-find_param_range<Tp, true, false>::operator()(const std::string& s, size_t i) {
-  internal::skip_delimiters(s, i);
+find_param_range<Tp, true, false>::operator()(std::string_view sv, size_t i) {
+  internal::skip_delimiters(sv, i);
 
   size_t j = i;
-  while (j < s.size() && s[j] != ' ' && s[j] != ',' && s[j] != ']')
+  while (j < sv.size() && sv[j] != ' ' && sv[j] != ',' && sv[j] != ']')
     ++j;
 
   return {i, j};
@@ -256,15 +254,15 @@ find_param_range<Tp, true, false>::operator()(const std::string& s, size_t i) {
 // character
 template <typename Tp>
 param_range
-find_param_range<Tp, true, true>::operator()(const std::string& s, size_t i) {
-  internal::skip_delimiters(s, i);
+find_param_range<Tp, true, true>::operator()(std::string_view sv, size_t i) {
+  internal::skip_delimiters(sv, i);
 
   // move from left quote
   size_t j = i + 1;
 
   // until next quote found
   // TODO: handle escaped quotes
-  while (j < s.size() && s[j] != s[i])
+  while (j < sv.size() && sv[j] != sv[i])
     ++j;
     
   return {i, j + 1};
@@ -274,16 +272,16 @@ find_param_range<Tp, true, true>::operator()(const std::string& s, size_t i) {
 // array
 template <typename Tp>
 param_range
-find_param_range<Tp, false, false>::operator()(const std::string& s, size_t i) {
-  internal::skip_delimiters(s, i);
+find_param_range<Tp, false, false>::operator()(std::string_view sv, size_t i) {
+  internal::skip_delimiters(sv, i);
 
   size_t j = i + 1;
 
   int count = 1;
-  for (; j < s.size() && count > 0; ++j) {
-    if (s[j] == '[')
+  for (; j < sv.size() && count > 0; ++j) {
+    if (sv[j] == '[')
       ++count;
-    else if (s[j] == ']')
+    else if (sv[j] == ']')
       --count;
   }
     
@@ -292,8 +290,8 @@ find_param_range<Tp, false, false>::operator()(const std::string& s, size_t i) {
 
 
 template <typename Tp>
-param_iterator<Tp>::param_iterator(const std::string& _s, size_t i): s(_s) {
-  range = finder(s, i);
+param_iterator<Tp>::param_iterator(std::string_view _sv, size_t i): sv(_sv) {
+  range = finder(sv, i);
 }
 
 
@@ -301,17 +299,17 @@ template <typename Tp>
 inline 
 bool
 param_iterator<Tp>::has_next() { 
-  return s[range.i] != ']'; 
+  return sv[range.i] != ']'; 
 }
 
 
 template <typename Tp>
 bool
-param_iterator<Tp>::get_next(std::string& val) {
+param_iterator<Tp>::get_next(std::string_view& val) {
   if (has_next()) {
-    val = s.substr(range.i, range.l);
+    val = sv.substr(range.i, range.l);
 
-    range = finder(s, range.j);
+    range = finder(sv, range.j);
 
     return true;
   }
@@ -323,8 +321,6 @@ param_iterator<Tp>::get_next(std::string& val) {
 // _LL_IMPLEMENTATION
 
 
-} // end of ll
+} // namespace ll
 
-#pragma GCC diagnostic pop // pop ignored "-Wundefined-inline"
-
-#endif // end of _LL_UTILITY_HPP
+#endif // _LL_UTILITY_HPP

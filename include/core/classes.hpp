@@ -29,6 +29,7 @@
 #include "../io/printer.hpp"
 #include "../io/destroyer.hpp"
 
+#include <chrono>
 #include <memory>
 
 
@@ -42,9 +43,9 @@ class method_class_base {
     typedef Cp class_type;
 
   public:
-    virtual std::string get_name() const = 0;
+    virtual const std::string& get_name() const = 0;
 
-    virtual double operator()(class_type*, const std::string&) const = 0;
+    virtual double operator()(class_type*, std::string_view) const = 0;
 
     virtual self* clone() const = 0;
 
@@ -115,16 +116,16 @@ class method_class : public method_class_base<typename fn_ptr_traits<MemFn>::cla
     method_class(mem_fn_ptr _fn, const std::string& _name)
       : fn(_fn), name(_name) { }
 
-    virtual std::string get_name() const override { return name; }
+    virtual const std::string& get_name() const override { return name; }
 
     /**
      * @brief execute the member function given pointer to class and arguments in string format
      * 
      * @param ptr pointer to class
-     * @param s arguments in string format
+     * @param sv arguments in string view format
      * @return double, execution time
      */
-    virtual double operator()(class_type* ptr, const std::string& s) const override;
+    virtual double operator()(class_type* ptr, std::string_view sv) const override;
 
     virtual self* clone() const override { return new self(*this); }
 
@@ -201,7 +202,7 @@ class universal_class {
      * @param s string representation of input of class factory
      * @return self& 
      */
-    self& initialize_or_replace(const std::string& s = "");
+    self& initialize_or_replace(std::string_view sv = "");
 
     /**
      * @brief add method given its function pointer and name in string format
@@ -225,11 +226,11 @@ class universal_class {
      * @brief call a method given name and arguments both in string
      * 
      * @param name method name in string
-     * @param args arguments in string
+     * @param args arguments in string view
      * 
      * @return double, execution time
      */
-    double operator()(const std::string& name, const std::string& args);
+    double operator()(const std::string& name, std::string_view args);
 
     // ~universal_class() { release_memory(); }
 };
@@ -241,22 +242,22 @@ namespace internal {
 template <typename Tp>
 inline 
 Tp 
-parse_next_arg(size_t& j , const std::string& s) {
-  skip_delimiters(s, j);
+parse_next_arg(size_t& j , std::string_view sv) {
+  skip_delimiters(sv, j);
 
-  param_range range = find_param_range<Tp>()(s, j);
+  param_range range = find_param_range<Tp>()(sv, j);
 
   // update j in-place before return
   j = range.j;
 
-  return universal_parser<Tp>()(s.substr(range.i, range.l));
+  return universal_parser<Tp>()(sv.substr(range.i, range.l));
 }
 
 
 // generate parameters of various types
 template <typename Tuple, std::size_t... Is>
 void generate_params(Tuple& params,
-                     const std::string& s, 
+                     std::string_view sv, 
                      std::index_sequence<Is...>) 
 {
   // ...
@@ -267,7 +268,7 @@ void generate_params(Tuple& params,
     (std::get<Is>(params) = 
       parse_next_arg<
         typename std::tuple_element_t<Is, Tuple>::type // tuple_element_t<> = input_parameter
-      >(j, s)
+      >(j, sv)
     ), 
     ...
   );
@@ -280,11 +281,11 @@ void generate_params(Tuple& params,
 
 template <class MemFn>
 double 
-method_class<MemFn>::operator()(class_type* ptr, const std::string& s) const {
+method_class<MemFn>::operator()(class_type* ptr, std::string_view sv) const {
   args_tuple_param_type params;
 
   // generate parameters in-place
-  internal::generate_params(params, s, std::make_index_sequence<args_size>{});
+  internal::generate_params(params, sv, std::make_index_sequence<args_size>{});
 
   return exec_call(ptr, params, std::make_index_sequence<args_size>{});
 }
@@ -294,8 +295,8 @@ method_class<MemFn>::operator()(class_type* ptr, const std::string& s) const {
 
 template <class Cp, class... Args>
 auto
-universal_class<Cp, Args...>::initialize_or_replace(const std::string& s) -> self& {
-  internal::generate_params(inputs, s, std::make_index_sequence<args_size>{});
+universal_class<Cp, Args...>::initialize_or_replace(std::string_view sv) -> self& {
+  internal::generate_params(inputs, sv, std::make_index_sequence<args_size>{});
   
   factory_helper(std::make_index_sequence<args_size>{});
 
@@ -315,7 +316,7 @@ universal_class<Cp, Args...>::add_method(MemFn fn, const std::string& s) -> self
 
 template <class Cp, class... Args>
 double 
-universal_class<Cp, Args...>::operator()(const std::string& name, const std::string& args) {
+universal_class<Cp, Args...>::operator()(const std::string& name, std::string_view args) {
   method_class_base<class_type>* method = nullptr;
   for (auto& m : methods)
     if (m->get_name() == name) {

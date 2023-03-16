@@ -28,6 +28,7 @@
 #include "../misc/utility.hpp"
 #include <algorithm>
 #include <regex>
+#include <charconv>
 
 namespace ll {
 
@@ -39,54 +40,85 @@ namespace ll {
 template <typename Tp> 
 struct universal_parser {
   /**
-   * @brief parser functor
+   * @brief parser functor, works for integers
    * 
-   * @param s input string
+   * @param sv input string view
    * @return Tp output type
    */
-  Tp operator()(const std::string& s);
+  typename std::enable_if<std::is_integral<Tp>::value, Tp>::type 
+  operator()(std::string_view sv);
 };
 
-template <> struct universal_parser<char> { char operator()(const std::string&) const; };
-template <> struct universal_parser<std::string> { std::string operator()(const std::string&) const; };
+template <> struct universal_parser<char> { char operator()(std::string_view) const; };
+template <> struct universal_parser<std::string> { std::string operator()(std::string_view) const; };
 
-template <> struct universal_parser<bool> { bool operator()(const std::string&) const; };
+template <> struct universal_parser<bool> { bool operator()(std::string_view) const; };
 
-template <> struct universal_parser<int> { int operator()(const std::string&) const; };
-template <> struct universal_parser<long> { long operator()(const std::string&) const; };
-template <> struct universal_parser<long long> { long long operator()(const std::string&) const; };
-template <> struct universal_parser<double> { double operator()(const std::string&) const; };
-template <> struct universal_parser<uint32_t> { uint32_t operator()(const std::string&) const; };
+/* signed integers are now parsed by template (not specialization)
+template <> struct universal_parser<int> { int operator()(std::string_view) const; };
+template <> struct universal_parser<long> { long operator()(std::string_view) const; };
+template <> struct universal_parser<long long> { long long operator()(std::string_view) const; };
+template <> struct universal_parser<uint32_t> { uint32_t operator()(std::string_view) const; };
+*/
+template <> struct universal_parser<double> { double operator()(std::string_view) const; };
 
-template <> struct universal_parser<TreeNode*> { TreeNode* operator()(const std::string&) const; };
-template <> struct universal_parser<TernaryTreeNode*> { TernaryTreeNode* operator()(const std::string&) const; };
-template <> struct universal_parser<RandomTreeNode*> { RandomTreeNode* operator()(const std::string&) const; };
-template <> struct universal_parser<QuadNode*> { QuadNode* operator()(const std::string&) const; };
-template <> struct universal_parser<NaryTreeNode*> { NaryTreeNode* operator()(const std::string&) const; };
+template <> struct universal_parser<TreeNode*> { TreeNode* operator()(std::string_view) const; };
+template <> struct universal_parser<TernaryTreeNode*> { TernaryTreeNode* operator()(std::string_view) const; };
+template <> struct universal_parser<RandomTreeNode*> { RandomTreeNode* operator()(std::string_view) const; };
+template <> struct universal_parser<QuadNode*> { QuadNode* operator()(std::string_view) const; };
+template <> struct universal_parser<NaryTreeNode*> { NaryTreeNode* operator()(std::string_view) const; };
 
-template <> struct universal_parser<NaryGraphNode*> { NaryGraphNode* operator()(const std::string&) const; };
+template <> struct universal_parser<NaryGraphNode*> { NaryGraphNode* operator()(std::string_view) const; };
 
-template <> struct universal_parser<ListNode*> { ListNode* operator()(const std::string&) const; };
-template <> struct universal_parser<RandomListNode*> { RandomListNode* operator()(const std::string&) const; };
-template <> struct universal_parser<CircularListNode*> { CircularListNode* operator()(const std::string&) const; };
-template <> struct universal_parser<TernaryListNode*> { TernaryListNode* operator()(const std::string&) const; };
+template <> struct universal_parser<ListNode*> { ListNode* operator()(std::string_view) const; };
+template <> struct universal_parser<RandomListNode*> { RandomListNode* operator()(std::string_view) const; };
+template <> struct universal_parser<CircularListNode*> { CircularListNode* operator()(std::string_view) const; };
+template <> struct universal_parser<TernaryListNode*> { TernaryListNode* operator()(std::string_view) const; };
 
-template <> struct universal_parser<NestedInteger> { NestedInteger operator()(const std::string&) const; };
-template <> struct universal_parser<Sea> { Sea operator()(const std::string&) const; };
+template <> struct universal_parser<NestedInteger> { NestedInteger operator()(std::string_view) const; };
+template <> struct universal_parser<Sea> { Sea operator()(std::string_view) const; };
 
-template <typename Tp> struct universal_parser<std::vector<Tp>> { std::vector<Tp> operator()(const std::string&) const; };
+template <typename Tp> struct universal_parser<std::vector<Tp>> { std::vector<Tp> operator()(std::string_view) const; };
+
+
+namespace internal {
+
+// https://en.cppreference.com/w/cpp/utility/from_chars
+template <class Tp>
+void from_chars_integral(const char* first, const char* last, Tp& t) {
+  // base of unsigned integer is 2
+  auto [ptr, ec] = std::from_chars(first, last, t, std::is_signed<Tp>::value ? 10 : 2);
+
+  if (ec == std::errc::invalid_argument)
+    throw std::invalid_argument("invalid_argument");
+  else if (ec == std::errc::result_out_of_range) 
+    throw std::out_of_range("result_out_of_range");
+}
+
+} // namespace internal
+
+
+// integers
+template <typename Tp>
+typename std::enable_if<std::is_integral<Tp>::value, Tp>::type 
+universal_parser<Tp>::operator()(std::string_view sv) {
+  Tp res;
+
+  internal::from_chars_integral(sv.begin(), sv.end(), res);
+  return res;
+}
 
 
 // vector
 template <typename Tp>
 std::vector<Tp>
-universal_parser<std::vector<Tp>>::operator()(const std::string& s) const {
+universal_parser<std::vector<Tp>>::operator()(std::string_view sv) const {
   std::vector<Tp> vec;
 
   universal_parser<Tp> parser;
 
-  param_iterator<Tp> param(s);
-  std::string val;
+  param_iterator<Tp> param(sv);
+  std::string_view val;
   while (param.get_next(val))
     vec.push_back(parser(val));
 
@@ -97,5 +129,5 @@ universal_parser<std::vector<Tp>>::operator()(const std::string& s) const {
 // _LL_IMPLEMENTATION
 
 
-} // end of ll
-#endif // end of _LL_PARSER_HPP
+} // namespace ll
+#endif // _LL_PARSER_HPP

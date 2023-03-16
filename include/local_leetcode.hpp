@@ -1,7 +1,7 @@
 /**
  * @file local_leetcode.hpp
  * 
- * @copyright Copyright (c) 2021 - 2022, Yuheng Huang <kongqiota@gmail.com>
+ * @copyright Copyright (c) 2021 - 2023, Yuheng Huang <kongqiota@gmail.com>
  * 
  * local_leetcode.hpp is part of library local leetcode, 
  * a c++ library that parses inputs and execute solutions of programming problems
@@ -36,6 +36,7 @@
 #include <climits>
 #include <numeric>
 #include <stack>
+#include <random>
 
 #include "data_structure/data_structure.hpp"
 #include "misc/utility.hpp"

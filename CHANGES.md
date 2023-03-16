@@ -1,15 +1,21 @@
 
 ------------------------------------------------------------------------------
-2023-03-15 (as of)
+2023-03-16 (as of)
 
 The document details the changes between this version, local leetcode 0.9.4.1 and previous version, local leetcode 0.9.4.0.
 
-- further optimized internal `input_parameter` to support n-dim (n >= 2) vector of pointers
+- the use of `libc++` is no longer enforced. to enable it please add `-DUSE_LIBC++` in cmake arguments
+
+- further optimized/simplified internal `input_parameter` to support n-dim (n >= 2) vector of pointers
   - 0-dim (single raw pointer) case is absorbed by in the same specialization now
   - non-pointer case is absorbed by the same specialization now. technically speaking these is no partial specialization now, template class only. 
   - changed internal implementations (use `universal_destroyer<...>` to manage memories instead of `unique_ptr<>`) to enable this feature
   - several type traits added for the implementation of the feature
   - new example added as test for the feature
+
+- substring operations are now replaced by `string_view` to achieve better performance, especially for long inputs
+
+- parsers for integers are now implemented in template (not specializations in *src/parser.cpp*)
 
 
 ------------------------------------------------------------------------------

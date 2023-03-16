@@ -172,7 +172,7 @@ execx(const std::string& path,
     // parse input file (methods and arguments)
 
     param_range range = find_param_range<std::vector<std::string>>()(line, 0);
-    auto methods = universal_parser<std::vector<std::string>>()(line.substr(range.i, range.l));
+    auto&& methods = universal_parser<std::vector<std::string>>()(line.substr(range.i, range.l));
 
     // find start of parameters
     size_t idx = range.j;
@@ -184,7 +184,7 @@ execx(const std::string& path,
     // arbitrary std::vector<Tp> will do
     param_iterator<std::vector<int>> param(line, idx);
 
-    std::string args;
+    std::string_view args;
     param.get_next(args);
 
     // need to remove '[' and ']' on both sides

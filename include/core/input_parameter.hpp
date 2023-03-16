@@ -113,21 +113,27 @@ class input_parameter {
   private:
     typedef input_parameter<Tp> self;
 
-    // elem_type[] for pointer element
-    // elem_type for non-pointer element
-    typedef typename is_vector_of_pointers<Tp>::value_type value_type;
-
     type par;
 
-    void clear() {
-      // emtpy destroyer functor is called for non-pointer types
-      // though it shouldn't affect performance at -O2 where the emtpy functor is inlined
+    // release memories allocated to pointer(s)
+    void clear(std::true_type) {
+      // elem_type[] for pointer element
+      // elem_type for non-pointer element
+      typedef typename is_vector_of_pointers<Tp>::value_type value_type;
+
       universal_destroyer<typename n_rank_vector<value_type, rank<type>::value - rank<value_type>::value>::type>()(par);
     }
+
+    // do nothing
+    void clear(std::false_type) { }
+
+    // if constexpr is an option, too
+    void clear() { clear(is_vector_of_pointers<Tp>{}); }
 
   public:
     input_parameter() = default;
 
+    // implicit coersion
     operator Tp() { return static_cast<Tp>(par); }
 
     template <

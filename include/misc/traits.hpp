@@ -34,6 +34,8 @@
 #include <unordered_map>
 
 
+using std::nullptr_t;
+
 namespace ll {
 
 
@@ -78,7 +80,7 @@ template <> struct is_character<char>: public std::true_type { };
 template <typename Tp> struct is_printable;
 
 /**
- * @brief if Tp is vectors of Tp* (including Tp* itself) after removing const and reference
+ * @brief if Tp is vector of Tp* (including scalar Tp*) after removing const and reference
  * 
  * @tparam Tp 
  */

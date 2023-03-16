@@ -11,13 +11,24 @@ if(CLANG_VERSION_MAJOR VERSION_GREATER 11)
   message(SEND_ERROR "Clang major version should be at least 11")
 endif()
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_CXX_FLAGS "-std=c++17 -stdlib=libc++ -O2 -Wall -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -Wall -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer")
+
 set(CMAKE_CXX_FLAGS_DEBUG "-g -D_LIBCPP_DEBUG=1")
 
 set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG")
 set(CMAKE_SHARED_LINKER_FLAGS "-fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer")
 
+
+option(USE_LIBC++ "need to build with libc++ on non-macos machine?" OFF)
+
+if(USE_LIBC++)
+  set(CMAKE_CXX_FLAGS "-stdlib=libc++ ${CMAKE_CXX_FLAGS}")
+  set(CMAKE_SHARED_LINKER_FLAGS "-stdlib=libc++ ${CMAKE_SHARED_LINKER_FLAGS} -lc++abi")
+  set(CMAKE_EXE_LINKER_FLAGS "-stdlib=libc++ ${CMAKE_EXE_LINKER_FLAGS} -lc++abi")
+endif()
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/examples)
@@ -72,5 +83,7 @@ if(BUILD_EXAMPLES)
     ${EXAMPLE_SOURCE_DIR} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
   )
 
-endif() # end of BUILD_EXAMPLE
+endif() # BUILD_EXAMPLE
+
+unset(USE_LIBC++ CACHE)
 unset(BUILD_EXAMPLES CACHE) # important: without this line the cache will affect the default value

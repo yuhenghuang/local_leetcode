@@ -7,8 +7,11 @@
       "command": "/bin/clang++",
       "args": [
         "-std=c++17",
-        "-stdlib=libc++",
+        // "-stdlib=libc++",
+
+        // where headers of local leetcode located
         "-I${HOME}/programs/local_leetcode/include",
+        // where library of local leetcode located
         "-L${HOME}/.local/lib",
         "-fsanitize=address",
         "-fsanitize=undefined",
@@ -17,8 +20,10 @@
         "-O2",
         "${file}",
         "-o",
+        // where output executable binary located
         "${fileDirname}/ExeFiles/${fileBasenameNoExtension}",
         // "-g",
+        // "-lc++abi",
         "-llocal_leetcode"
       ],
       "options": {
@@ -39,9 +44,11 @@
       "command": "/bin/clang++",
       "args": [
         "-std=c++17",
-        "-stdlib=libc++",
+        // "-stdlib=libc++",
+
+        // where headers of local leetcode located
         "-I${HOME}/programs/local_leetcode/include",
-        "-L${HOME}/.local/lib",
+        // where library of local leetcode located
         "-fsanitize=address",
         "-fsanitize=undefined",
         "-fno-omit-frame-pointer",
@@ -50,7 +57,9 @@
         // "-O2",
         "${file}",
         "-o",
+        // where output executable binary located
         "${fileDirname}/ExeFiles/${fileBasenameNoExtension}",
+        // "-lc++abi",
         "-llocal_leetcode"
       ],
       "options": {
