@@ -23,7 +23,7 @@
 
 
 #include "io/printer.hpp"
-// #include <iomanip>
+#include <iomanip>
 
 namespace ll {
 namespace internal {
@@ -119,7 +119,8 @@ universal_printer<bool>::operator()(const bool res) {
 void 
 universal_printer<double>::operator()(const double res) {
   // std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1) << res;
-  printf("%.5f", res);
+  // printf("%.5f", res);
+  std::cout << std::setprecision(6) << res;
 }
 
 

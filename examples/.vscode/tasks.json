@@ -54,6 +54,7 @@
         "-fno-omit-frame-pointer",
         "-fstandalone-debug",
         "-g",
+        // "-D_LIBCPP_DEBUG=1",
         // "-O2",
         "${file}",
         "-o",

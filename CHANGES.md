@@ -1,6 +1,6 @@
 
 ------------------------------------------------------------------------------
-2023-03-16 (as of)
+2023-06-08 (as of)
 
 The document details the changes between this version, local leetcode 0.9.4.1 and previous version, local leetcode 0.9.4.0.
 
@@ -16,6 +16,8 @@ The document details the changes between this version, local leetcode 0.9.4.1 an
 - substring operations are now replaced by `string_view` to achieve better performance, especially for long inputs
 
 - parsers for integers are now implemented in template (not specializations in *src/parser.cpp*)
+
+- fix the print precision of `double` type by `std::setprecision(6)`
 
 
 ------------------------------------------------------------------------------
