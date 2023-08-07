@@ -77,6 +77,7 @@ template <> struct universal_parser<TernaryListNode*> { TernaryListNode* operato
 
 template <> struct universal_parser<NestedInteger> { NestedInteger operator()(std::string_view) const; };
 template <> struct universal_parser<Sea> { Sea operator()(std::string_view) const; };
+template <> struct universal_parser<MountainArray> { MountainArray operator()(std::string_view) const; };
 
 template <typename Tp> struct universal_parser<std::vector<Tp>> { std::vector<Tp> operator()(std::string_view) const; };
 

@@ -60,6 +60,10 @@ struct rank<std::vector<Tp>>: public std::integral_constant<size_t, 1UL + rank<T
 template <>
 struct rank<NestedInteger>: public std::integral_constant<size_t, 1UL> { };
 
+// mountain array
+template <>
+struct rank<MountainArray>: public std::integral_constant<size_t, 1UL> { };
+
 // sea
 template <>
 struct rank<Sea>: public std::integral_constant<size_t, 2UL> { };

@@ -1,6 +1,13 @@
+------------------------------------------------------------------------------
+2023-08-07 (as of)
+
+The document details the changes between this version, local leetcode 0.9.4.2 and previous version, local leetcode 0.9.4.1.
+
+- add parser for `MountainArray` (problem no.1095)
+
 
 ------------------------------------------------------------------------------
-2023-06-08 (as of)
+2023-06-08
 
 The document details the changes between this version, local leetcode 0.9.4.1 and previous version, local leetcode 0.9.4.0.
 

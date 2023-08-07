@@ -138,4 +138,37 @@ Sea::hasShips(std::vector<int> topRight, std::vector<int> bottomLeft) {
   ) > 0;
 }
 
+
+void
+MountainArray::raise_excessive_calls() {
+  if (++n_calls > 100)
+    throw std::runtime_error("more thant 100 calls made to MountainArray.get()");
+}
+
+MountainArray::MountainArray(): n_calls(0) { }
+
+MountainArray::MountainArray(std::vector<int>&& _arr) noexcept: n_calls(0), arr(std::move(_arr)) { }
+
+MountainArray::MountainArray(MountainArray&& ma) noexcept: n_calls(ma.n_calls), arr(std::move(ma.arr)) { }
+
+MountainArray&
+MountainArray::operator=(MountainArray&& ma) noexcept {
+  n_calls =  ma.n_calls;
+  arr = std::move(ma.arr);
+
+  return *this;
+}
+
+int 
+MountainArray::get(int index) {
+  // increment calls to the method
+  // raise exception if the method is called more than 100 times
+  raise_excessive_calls(); 
+
+  return arr[index]; 
+}
+
+int
+MountainArray::length() { return arr.size(); }
+
 } // end of ll

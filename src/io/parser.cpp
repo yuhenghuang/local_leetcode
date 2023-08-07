@@ -544,4 +544,13 @@ universal_parser<Sea>::operator()(std::string_view sv) const {
   return Sea(ships);
 }
 
+
+// MountainArray
+MountainArray
+universal_parser<MountainArray>::operator()(std::string_view sv) const {
+  std::vector<int>&& arr = universal_parser<std::vector<int>>()(sv);
+
+  return MountainArray(std::move(arr));
+}
+
 } // end of ll

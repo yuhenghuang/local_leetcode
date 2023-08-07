@@ -305,6 +305,25 @@ class Sea {
 };
 
 
+class MountainArray {
+  private:
+    int n_calls;
+    std::vector<int> arr;
+
+    void raise_excessive_calls();
+
+  public:
+    MountainArray();
+    MountainArray(std::vector<int>&&) noexcept;
+
+    MountainArray(MountainArray&&) noexcept;
+    MountainArray& operator=(MountainArray&&) noexcept;
+
+    int get(int index);
+    int length();
+};
+
+
 // _LL_IMPLEMENTATION
 
 
