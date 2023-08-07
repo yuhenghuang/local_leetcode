@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16.3)
 
-project(local_leetcode VERSION 0.9.4.1)
+project(local_leetcode VERSION 0.9.4.2)
 
 # check clang and its version
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "^(Apple)?Clang$")
