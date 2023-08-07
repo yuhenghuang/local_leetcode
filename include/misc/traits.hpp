@@ -64,6 +64,10 @@ struct rank<NestedInteger>: public std::integral_constant<size_t, 1UL> { };
 template <>
 struct rank<MountainArray>: public std::integral_constant<size_t, 1UL> { };
 
+// master
+template <>
+struct rank<Master>: public std::integral_constant<size_t, 1UL> { };
+
 // sea
 template <>
 struct rank<Sea>: public std::integral_constant<size_t, 2UL> { };

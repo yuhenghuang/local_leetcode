@@ -344,7 +344,12 @@ method_class<MemFn>::exec_call(class_type* ptr,
 {
   auto start( std::chrono::high_resolution_clock::now() );
 
-  (ptr->*fn)(std::get<Is>(params) ...);
+  try {
+    (ptr->*fn)(std::get<Is>(params) ...);
+  }
+  catch (const EarlyStop& e) {
+    // catch early stop and do nothing
+  }
 
   auto end( std::chrono::high_resolution_clock::now() );
   std::chrono::duration<double, std::milli> elapsed( end - start );

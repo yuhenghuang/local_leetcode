@@ -23,6 +23,7 @@
 
 
 #include "io/parser.hpp"
+#include "core/classes.hpp"
 
 namespace ll {
 namespace internal {
@@ -545,12 +546,46 @@ universal_parser<Sea>::operator()(std::string_view sv) const {
 }
 
 
-// MountainArray
+// mountain array
 MountainArray
 universal_parser<MountainArray>::operator()(std::string_view sv) const {
   std::vector<int>&& arr = universal_parser<std::vector<int>>()(sv);
 
   return MountainArray(std::move(arr));
 }
+
+
+// guess functor
+Guess
+universal_parser<Guess>::operator()(std::string_view sv) const {
+  int pick = universal_parser<int>()(sv);
+
+  return Guess(pick);
+}
+
+
+// is bad version functor
+IsBadVersion
+universal_parser<IsBadVersion>::operator()(std::string_view sv) const {
+  int bad = universal_parser<int>()(sv);
+
+  return IsBadVersion(bad);
+}
+
+
+// master
+Master
+universal_parser<Master>::operator()(std::string_view sv) const {
+  std::tuple<
+    input_parameter<std::string&&>, 
+    input_parameter<std::vector<std::string>&&>, 
+    input_parameter<int>
+  > inputs;
+
+  internal::generate_params(inputs, sv.substr(1, sv.size() - 1), std::make_index_sequence<3UL>{});
+
+  return Master(std::get<0>(inputs), std::get<1>(inputs), std::get<2>(inputs));
+}
+
 
 } // end of ll

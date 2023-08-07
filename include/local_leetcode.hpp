@@ -58,6 +58,9 @@ using ll::ListNode;
 using ll::NestedInteger;
 using ll::Sea;
 using ll::MountainArray;
+using ll::Guess;
+using ll::IsBadVersion;
+using ll::Master;
 
 using ll::Iterator;
 

@@ -124,6 +124,15 @@ path_to_input_file(const char* dir,
 }
 
 
+// early stop exception
+// EarlyStop::EarlyStop(): std::runtime_error("std::runtime_error") { }
+
+EarlyStop::EarlyStop(const std::string& msg): std::runtime_error(msg) { }
+
+// const char*
+// EarlyStop::what() const noexcept { return msg.c_str(); }
+
+
 // inline
 TreeNode* 
 find_node(TreeNode* root, int val, bool is_bst) {

@@ -27,6 +27,7 @@
 
 
 #include <vector>
+#include <unordered_set>
 #include <stddef.h>
 
 namespace ll {
@@ -323,6 +324,52 @@ class MountainArray {
     int length();
 };
 
+
+class Guess {
+  private:
+    int pick;
+
+  public:
+    Guess();
+    Guess(int);
+
+    int operator()(int);
+};
+
+
+class IsBadVersion {
+  private:
+    int bad;
+
+  public:
+    IsBadVersion();
+    IsBadVersion(int);
+
+    bool operator()(int);
+};
+
+
+class Master {
+  private:
+    std::string secret;
+    std::vector<std::string> words;
+    int allowedGuesses;
+
+    std::unordered_set<int> s;
+
+    int str_to_int(const std::string&);
+
+  public:
+    Master();
+    Master(std::string&&, std::vector<std::string>&&, int) noexcept;
+
+    Master(Master&&) noexcept;
+    Master& operator=(Master&&) noexcept;
+
+    int guess(const std::string& word);
+
+    friend std::ostream& operator<<(std::ostream&, const Master&);
+};
 
 // _LL_IMPLEMENTATION
 

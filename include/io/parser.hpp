@@ -54,12 +54,13 @@ template <> struct universal_parser<std::string> { std::string operator()(std::s
 
 template <> struct universal_parser<bool> { bool operator()(std::string_view) const; };
 
-/* signed integers are now parsed by template (not specialization)
+/* integers are now parsed by template (not specialization)
 template <> struct universal_parser<int> { int operator()(std::string_view) const; };
 template <> struct universal_parser<long> { long operator()(std::string_view) const; };
 template <> struct universal_parser<long long> { long long operator()(std::string_view) const; };
 template <> struct universal_parser<uint32_t> { uint32_t operator()(std::string_view) const; };
 */
+
 template <> struct universal_parser<double> { double operator()(std::string_view) const; };
 
 template <> struct universal_parser<TreeNode*> { TreeNode* operator()(std::string_view) const; };
@@ -78,6 +79,9 @@ template <> struct universal_parser<TernaryListNode*> { TernaryListNode* operato
 template <> struct universal_parser<NestedInteger> { NestedInteger operator()(std::string_view) const; };
 template <> struct universal_parser<Sea> { Sea operator()(std::string_view) const; };
 template <> struct universal_parser<MountainArray> { MountainArray operator()(std::string_view) const; };
+template <> struct universal_parser<Guess> { Guess operator()(std::string_view) const; };
+template <> struct universal_parser<IsBadVersion> { IsBadVersion operator()(std::string_view) const; };
+template <> struct universal_parser<Master> { Master operator()(std::string_view) const; };
 
 template <typename Tp> struct universal_parser<std::vector<Tp>> { std::vector<Tp> operator()(std::string_view) const; };
 

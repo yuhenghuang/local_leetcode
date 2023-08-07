@@ -236,6 +236,20 @@ path_to_input_file(const char* dir,
                    const std::string& cpp_path);
 
 
+class EarlyStop: 
+  public std::runtime_error 
+{
+  // protected:
+  //   std::string msg;
+
+  public:
+    // EarlyStop();
+    EarlyStop(const std::string&);
+    // const char* what() const noexcept override;
+
+    // virtual ~EarlyStop() { }
+};
+
 
 // scalar
 template <typename Tp>

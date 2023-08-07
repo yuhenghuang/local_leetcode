@@ -5,6 +5,20 @@ The document details the changes between this version, local leetcode 0.9.4.2 an
 
 - add parser for `MountainArray` (problem no.1095)
 
+- add parser for functor `Guess` (problem no.374), whose `int operator()(int num)` is implemented to mimic the behavior of `int guess(int num)` in the problem. The usage is defining the method `int guessNumber(int n, Guess guess)` and using `int, int` for the input.
+
+- add parser for functor `IsBadVersion` (problem no.278). the usage is similar to `Guess`.
+
+- add parser for class `Master` (problem no.843)
+  - construct the input as [secret, words, allowedGuesses], words
+    - three components are needed to construct `Master` and bundled by `[]`
+  - define the method in the following way, `void findSecretWord(Master& master, vector<string>& words)`, put `master` as the first argument
+    - for the purpose of being in line with other general implementations
+    - don't feel necessary to write specialization for this one particular problem
+  - the implementation uses internal runtime exception `ll::EarlyStop` to early stop the method
+    - `std::runtime_exception` is known to cause issue on some platforms with `libc++` and `ASAN`
+    - set environment variable `ASAN_OPTIONS=alloc_dealloc_mismatch=0` to ignore the issue.
+
 
 ------------------------------------------------------------------------------
 2023-06-08

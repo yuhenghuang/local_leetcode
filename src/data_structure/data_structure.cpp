@@ -23,6 +23,7 @@
 
 
 #include "data_structure/data_structure.hpp"
+#include "misc/utility.hpp"
 
 namespace ll {
 
@@ -170,5 +171,89 @@ MountainArray::get(int index) {
 
 int
 MountainArray::length() { return arr.size(); }
+
+
+Guess::Guess() { }
+
+Guess::Guess(int _pick): pick(_pick) { }
+
+int
+Guess::operator()(int num) {
+  return num > pick ? -1 : (num < pick ? 1 : 0);
+}
+
+
+IsBadVersion::IsBadVersion() { }
+
+IsBadVersion::IsBadVersion(int _bad): bad(_bad) { }
+
+bool
+IsBadVersion::operator()(int version) {
+  return version >= bad;
+}
+
+
+int
+Master::str_to_int(const std::string& s) {
+  int val = 0;
+  for (char c : s)
+    val = (val << 5) | (c - 'a');
+    
+  return val;
+}
+
+
+Master::Master() { }
+
+Master::Master(std::string&& _secret, std::vector<std::string>&& _words, int _allowedGuesses) noexcept:
+  secret(std::move(_secret)), words(std::move(_words)), allowedGuesses(_allowedGuesses)
+{
+  for (auto& w : words)
+    s.insert(str_to_int(w));
+}
+
+Master::Master(Master&& m) noexcept:
+  secret(std::move(m.secret)), words(std::move(m.words)), allowedGuesses(m.allowedGuesses),
+  s(std::move(m.s))
+{ }
+
+Master&
+Master::operator=(Master&& m) noexcept {
+  secret = std::move(m.secret);
+  words = std::move(m.words);
+  allowedGuesses = m.allowedGuesses;
+
+  s = std::move(m.s);
+
+  return *this;
+}
+
+int 
+Master::guess(const std::string& word) {
+  // word not from words
+  if (!s.count(str_to_int(word)))
+    return -1;
+
+  int matches = 0;
+  for (int i = 0; i < 6; ++i)
+    if (secret[i] == word[i])
+      ++matches;
+
+  if (matches == 6)
+    allowedGuesses = -9;
+  else
+    --allowedGuesses;
+
+  if (allowedGuesses <= 0)
+    throw EarlyStop("early stop");
+  
+  return matches;
+}
+
+std::ostream&
+operator<<(std::ostream& os, const Master& m) {
+  return os << (m.allowedGuesses == -9 ? "You guessed the secret word correctly." : "Either you took too many guesses, or you did not find the secret word.");
+}
+
 
 } // end of ll
